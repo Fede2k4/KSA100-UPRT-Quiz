@@ -38,9 +38,12 @@
         }
 
         .logo-main {
-            max-width: 100%;
+            max-width: 80%;
             height: auto;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .screen { display: none; }
@@ -149,7 +152,7 @@
 
     <div class="container">
         <div id="screen-login" class="screen active">
-            <img src="logo.png" alt="AELO Swiss Academy" class="logo-main" onerror="this.style.display='none';">
+            <img src="https://lh3.googleusercontent.com/d/1Xg7X85x38pZ0N586Z795pZ6442654316" alt="AELO Swiss Academy" class="logo-main" onerror="this.src='logo.png';">
             <h2>KSA 100 - UPRT TEST</h2>
             <p>Enter your full name to start the timed quiz<br>(10 seconds per question).</p>
             <input type="text" id="student-name" placeholder="Full Name" required>
@@ -337,9 +340,10 @@
             
             document.getElementById('final-score').innerText = `Well done, ${studentName.toUpperCase()}! You have successfully completed the test.`;
             
+            // Fixed Final Report structure fully in English
             let resultString = `STUDENT: ${studentName.toUpperCase()}\n`;
             resultString += `DATE: ${new Date().toLocaleString()}\n`;
-            resultString += `FINAL RESULT: ${percentageScore}% CORRECT ANSWERS (${score}/${quizData.length})`;
+            resultString += `FINAL SCORE: ${percentageScore}% CORRECT ANSWERS (${score}/${quizData.length})`;
 
             document.getElementById('results-code').innerText = resultString;
         }
