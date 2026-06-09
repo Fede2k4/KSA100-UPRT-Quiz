@@ -1,24 +1,22 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upset Recovery Quiz</title>
+    <title>AELO KSA100 - UPRT TEST</title>
     <style>
         :root {
-            /* Colore primario rosso per AELO SWISS ACADEMY */
             --aelo-red: #E31D2B; 
             --primary: var(--aelo-red);
-            --secondary: #A0151E; /* Una tonalità più scura per sfumature */
+            --secondary: #A0151E;
             --success: #11998e;
-            --danger: #FF6B6B; /* Rosso più chiaro per il timer */
+            --danger: #FF6B6B; 
             --dark: #2c3e50;
             --light: #f8f9fa;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Sfondo del sito rosso, ispirato ad AELO */
             background-color: var(--aelo-red); 
             margin: 0;
             padding: 20px;
@@ -37,6 +35,12 @@
             width: 100%;
             max-width: 600px;
             text-align: center;
+        }
+
+        .logo-main {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
         }
 
         .screen { display: none; }
@@ -61,6 +65,8 @@
             border-radius: 8px;
             cursor: pointer;
             transition: 0.2s;
+            text-transform: uppercase;
+            font-weight: bold;
         }
 
         button:hover { opacity: 0.9; transform: translateY(-2px); }
@@ -91,15 +97,16 @@
             display: none;
         }
 
-        /* Testo della domanda in stampatello maiuscolo */
         #question-text {
             text-transform: uppercase;
+            font-size: 1.2rem;
+            margin: 15px 0;
         }
 
         .options-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 15px;
+            gap: 12px;
             margin-top: 20px;
         }
 
@@ -112,8 +119,9 @@
             text-align: left;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 15px;
+            font-size: 14px;
             transition: 0.15s;
+            text-transform: uppercase;
         }
 
         .option-btn:hover { 
@@ -141,27 +149,28 @@
 
     <div class="container">
         <div id="screen-login" class="screen active">
-            <h2>UPSET RECOVERY TEST</h2>
-            <p>Inserisci il tuo nome e cognome per iniziare il quiz a tempo (10 secondi per domanda).</p>
-            <input type="text" id="student-name" placeholder="Nome Cognome" required>
+            <img src="logo.png" alt="AELO Swiss Academy" class="logo-main" onerror="this.style.display='none';">
+            <h2>KSA 100 - UPRT TEST</h2>
+            <p>Enter your full name to start the timed quiz<br>(10 seconds per question).</p>
+            <input type="text" id="student-name" placeholder="Full Name" required>
             <br>
-            <button onclick="startQuiz()">INIZIA IL TEST</button>
+            <button onclick="startQuiz()">Start Test</button>
         </div>
 
         <div id="screen-quiz" class="screen">
             <div class="timer-bar"><div id="timer" class="timer-progress"></div></div>
             <img id="quiz-img" class="quiz-image" src="" alt="Quiz Image" onerror="this.style.display='none';">
-            <h3 id="question-text">DOMANDA...</h3>
+            <h3 id="question-text">QUESTION...</h3>
             <div class="options-grid" id="options-container"></div>
         </div>
 
         <div id="screen-results" class="screen">
-            <h2>QUIZ COMPLETATO!</h2>
-            <p id="final-score">Hai terminato il test.</p>
-            <p>Copia il resoconto nel riquadro qui sotto o salva il PDF per inviarlo al docente:</p>
+            <h2>QUIZ COMPLETED!</h2>
+            <p id="final-score">You have finished the test.</p>
+            <p>Copy the report below or save the PDF to send to your instructor:</p>
             <div class="results-box" id="results-code"></div>
             <br>
-            <button onclick="window.print()">SALVA / STAMPA PDF</button>
+            <button onclick="window.print()">Save / Print PDF</button>
         </div>
     </div>
 
@@ -176,19 +185,19 @@
                     "DECREASE THROTTLE, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE",
                     "PUSH TO UNLOAD, PITCH UP AND INCREASE THROTTLE"
                 ],
-                correct: 0, 
+                correct: 2, // C
                 time: 10 
             },
             {
                 question: "WHAT IS THE RECOVERY FOR THIS SITUATION?",
                 image: "assetto2.png", 
                 options: [
-                    "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND DECREASE THROTTLE",
+                    "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE",
                     "WINGS LEVELLED, PUSH TO UNLOAD, PITCH UP AND INCREASE THROTTLE",
                     "THROTTLE IDLE, WINGS LEVELLED, PITCH UP",
                     "PUSH TO UNLOAD, INCREASE THROTTLE, WINGS LEVELLED, PITCH UP"
                 ],
-                correct: 2, 
+                correct: 0, // A
                 time: 10 
             },
             {
@@ -200,7 +209,7 @@
                     "NOT UPSET",
                     "STALL"
                 ],
-                correct: 0, 
+                correct: 2, // C
                 time: 10 
             },
             {
@@ -212,19 +221,31 @@
                     "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP",
                     "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE"
                 ],
-                correct: 3, 
+                correct: 3, // D
+                time: 10 
+            },
+            {
+                question: "WHAT IS THE RECOVERY FOR THIS SITUATION?",
+                image: "assetto5.png", 
+                options: [
+                    "PULL TO UNLOAD, WINGS LEVELLED, PITCH UP AND DECREASE THROTTLE",
+                    "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP",
+                    "PULL TO UNLOAD WINGS LEVELLED, PITCH UP",
+                    "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE"
+                ],
+                correct: 3, // D
                 time: 10 
             },
             {
                 question: "WHICH UPSET IS THIS?",
-                image: "assetto5.png", 
+                image: "assetto6.png", 
                 options: [
                     "NOSE LOW",
                     "NOT UPSET",
                     "NOSE LOW AND BANK",
                     "DEEP DIVE"
                 ],
-                correct: 0, 
+                correct: 1, // B
                 time: 10 
             }
         ];
@@ -243,7 +264,7 @@
         function startQuiz() {
             studentName = document.getElementById('student-name').value.trim();
             if (!studentName) {
-                alert("Per favore, inserisci il tuo nome.");
+                alert("Please enter your name.");
                 return;
             }
             showScreen('screen-quiz');
@@ -314,11 +335,12 @@
             
             const percentageScore = Math.round((score / quizData.length) * 100);
             
-            document.getElementById('final-score').innerText = `OTTIMO LAVORO ${studentName.toUpperCase()}! TEST COMPLETATO CON SUCCESSO.`;
+            document.getElementById('final-score').innerText = `Well done, ${studentName.toUpperCase()}! You have successfully completed the test.`;
             
-            let resultString = `STUDENTE: ${studentName.toUpperCase()}\n`;
-            resultString += `DATA DI SVOLGIMENTO: ${new Date().toLocaleString()}\n`;
-            resultString += `RISULTATO FINALE: ${percentageScore}% RISPOSTE CORRETTE (${score}/${quizData.length})`;
+            // Final Report in English
+            let resultString = `STUDENT: ${studentName.toUpperCase()}\n`;
+            resultString += `DATE: ${new Date().toLocaleString()}\n`;
+            resultString += `FINAL RESULT: ${percentageScore}% CORRECT ANSWERS (${score}/${quizData.length})`;
 
             document.getElementById('results-code').innerText = resultString;
         }
