@@ -178,7 +178,8 @@
     </div>
 
     <script>
-        const quizData = [
+        // Database fisso delle domande originarie
+        const masterQuizData = [
             {
                 question: "WHAT IS THE RECOVERY FOR THIS SITUATION?",
                 image: "assetto1.png", 
@@ -188,7 +189,7 @@
                     "DECREASE THROTTLE, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE",
                     "PUSH TO UNLOAD, PITCH UP AND INCREASE THROTTLE"
                 ],
-                correct: 2, // C
+                correctText: "DECREASE THROTTLE, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE", // C
                 time: 10 
             },
             {
@@ -200,7 +201,7 @@
                     "THROTTLE IDLE, WINGS LEVELLED, PITCH UP",
                     "PUSH TO UNLOAD, INCREASE THROTTLE, WINGS LEVELLED, PITCH UP"
                 ],
-                correct: 0, // A
+                correctText: "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE", // A
                 time: 10 
             },
             {
@@ -212,7 +213,7 @@
                     "NOT UPSET",
                     "STALL"
                 ],
-                correct: 2, // C
+                correctText: "NOT UPSET", // C
                 time: 10 
             },
             {
@@ -224,7 +225,7 @@
                     "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP",
                     "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE"
                 ],
-                correct: 3, // D
+                correctText: "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE", // D
                 time: 10 
             },
             {
@@ -236,7 +237,7 @@
                     "PULL TO UNLOAD WINGS LEVELLED, PITCH UP",
                     "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE"
                 ],
-                correct: 3, // D
+                correctText: "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE", // D
                 time: 10 
             },
             {
@@ -248,16 +249,41 @@
                     "NOSE LOW AND BANK",
                     "DEEP DIVE"
                 ],
-                correct: 1, // B
+                correctText: "NOT UPSET", // B
                 time: 10 
             }
         ];
 
+        let quizData = [];
         let currentQuestionIndex = 0;
         let score = 0;
         let studentName = "";
         let timerInterval;
         let timeLeft = 0;
+
+        // Algoritmo di mescolamento Fisher-Yates
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function prepareQuizData() {
+            // Clona la lista principale per non corromperla tra un tentativo e l'altro
+            let clonedData = JSON.parse(JSON.stringify(masterQuizData));
+            
+            // 1. Mischia le domande principali
+            shuffle(clonedData);
+            
+            // 2. Mischia le opzioni dentro ogni singola domanda
+            clonedData.forEach(item => {
+                shuffle(item.options);
+            });
+            
+            return clonedData;
+        }
 
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -270,6 +296,12 @@
                 alert("Please enter your name.");
                 return;
             }
+            
+            // Genera una sequenza casuale unica per questo specifico tentativo
+            quizData = prepareQuizData();
+            currentQuestionIndex = 0;
+            score = 0;
+            
             showScreen('screen-quiz');
             loadQuestion();
         }
@@ -295,11 +327,11 @@
             const optionsContainer = document.getElementById('options-container');
             optionsContainer.innerHTML = '';
             
-            currentQuestion.options.forEach((option, index) => {
+            currentQuestion.options.forEach((option) => {
                 const btn = document.createElement('button');
                 btn.className = 'option-btn';
                 btn.innerText = option;
-                btn.onclick = () => selectAnswer(index);
+                btn.onclick = () => selectAnswer(option);
                 optionsContainer.appendChild(btn);
             });
 
@@ -311,7 +343,7 @@
                 timeLeft -= tickRate;
                 updateTimerBar();
                 if (timeLeft <= 0) {
-                    selectAnswer(-1); 
+                    selectAnswer(""); // Tempo scaduto, nessuna stringa passata
                 }
             }, tickRate);
         }
@@ -322,10 +354,12 @@
             document.getElementById('timer').style.width = percentage + '%';
         }
 
-        function selectAnswer(selectedIndex) {
+        function selectAnswer(selectedOptionText) {
             clearInterval(timerInterval);
             const currentQuestion = quizData[currentQuestionIndex];
-            const isCorrect = selectedIndex === currentQuestion.correct;
+            
+            // Verifica la correttezza confrontando il testo della risposta, infallibile contro il random
+            const isCorrect = selectedOptionText === currentQuestion.correctText;
             
             if (isCorrect) score++;
 
@@ -340,7 +374,6 @@
             
             document.getElementById('final-score').innerText = `Well done, ${studentName.toUpperCase()}! You have successfully completed the test.`;
             
-            // Fixed Final Report structure fully in English
             let resultString = `STUDENT: ${studentName.toUpperCase()}\n`;
             resultString += `DATE: ${new Date().toLocaleString()}\n`;
             resultString += `FINAL SCORE: ${percentageScore}% CORRECT ANSWERS (${score}/${quizData.length})`;
