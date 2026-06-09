@@ -6,17 +6,20 @@
     <title>Upset Recovery Quiz</title>
     <style>
         :root {
-            --primary: #4a00e0;
-            --secondary: #8e2de2;
+            /* Colore primario rosso per AELO SWISS ACADEMY */
+            --aelo-red: #E31D2B; 
+            --primary: var(--aelo-red);
+            --secondary: #A0151E; /* Una tonalità più scura per sfumature */
             --success: #11998e;
-            --danger: #eb3349;
+            --danger: #FF6B6B; /* Rosso più chiaro per il timer */
             --dark: #2c3e50;
             --light: #f8f9fa;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            /* Sfondo del sito rosso, ispirato ad AELO */
+            background-color: var(--aelo-red); 
             margin: 0;
             padding: 20px;
             display: flex;
@@ -30,7 +33,7 @@
             background: white;
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
             width: 100%;
             max-width: 600px;
             text-align: center;
@@ -88,6 +91,11 @@
             display: none;
         }
 
+        /* Testo della domanda in stampatello maiuscolo */
+        #question-text {
+            text-transform: uppercase;
+        }
+
         .options-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -133,35 +141,34 @@
 
     <div class="container">
         <div id="screen-login" class="screen active">
-            <h2>Upset Recovery Test</h2>
+            <h2>UPSET RECOVERY TEST</h2>
             <p>Inserisci il tuo nome e cognome per iniziare il quiz a tempo (10 secondi per domanda).</p>
             <input type="text" id="student-name" placeholder="Nome Cognome" required>
             <br>
-            <button onclick="startQuiz()">Inizia il Test</button>
+            <button onclick="startQuiz()">INIZIA IL TEST</button>
         </div>
 
         <div id="screen-quiz" class="screen">
             <div class="timer-bar"><div id="timer" class="timer-progress"></div></div>
             <img id="quiz-img" class="quiz-image" src="" alt="Quiz Image" onerror="this.style.display='none';">
-            <h3 id="question-text">Domanda...</h3>
+            <h3 id="question-text">DOMANDA...</h3>
             <div class="options-grid" id="options-container"></div>
         </div>
 
         <div id="screen-results" class="screen">
-            <h2>Quiz Completato!</h2>
+            <h2>QUIZ COMPLETATO!</h2>
             <p id="final-score">Hai terminato il test.</p>
             <p>Copia il resoconto nel riquadro qui sotto o salva il PDF per inviarlo al docente:</p>
             <div class="results-box" id="results-code"></div>
             <br>
-            <button onclick="window.print()">Salva / Stampa PDF</button>
+            <button onclick="window.print()">SALVA / STAMPA PDF</button>
         </div>
     </div>
 
     <script>
-        // TEMPO AGGIORNATO A 10 SECONDI PER DOMANDA
         const quizData = [
             {
-                question: "What is the recovery for this situation?",
+                question: "WHAT IS THE RECOVERY FOR THIS SITUATION?",
                 image: "assetto1.png", 
                 options: [
                     "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE",
@@ -173,7 +180,7 @@
                 time: 10 
             },
             {
-                question: "What is the recovery for this situation?",
+                question: "WHAT IS THE RECOVERY FOR THIS SITUATION?",
                 image: "assetto2.png", 
                 options: [
                     "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND DECREASE THROTTLE",
@@ -185,7 +192,7 @@
                 time: 10 
             },
             {
-                question: "Which upset is this?",
+                question: "WHICH UPSET IS THIS?",
                 image: "assetto3.png", 
                 options: [
                     "NOSE HIGH",
@@ -197,19 +204,19 @@
                 time: 10 
             },
             {
-                question: "What is the recovery for this situation?",
+                question: "WHAT IS THE RECOVERY FOR THIS SITUATION?",
                 image: "assetto4.png", 
                 options: [
                     "PULL TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE",
                     "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP",
-                    "PULL TO UNLO WINGS LEVELLED, PITCH UP",
+                    "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP",
                     "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE"
                 ],
                 correct: 3, 
                 time: 10 
             },
             {
-                question: "Which upset is this?",
+                question: "WHICH UPSET IS THIS?",
                 image: "assetto5.png", 
                 options: [
                     "NOSE LOW",
@@ -305,13 +312,11 @@
         function endQuiz() {
             showScreen('screen-results');
             
-            // Calcolo della percentuale esatta
             const percentageScore = Math.round((score / quizData.length) * 100);
             
-            document.getElementById('final-score').innerText = `Ottimo lavoro ${studentName}! Test completato con successo.`;
+            document.getElementById('final-score').innerText = `OTTIMO LAVORO ${studentName.toUpperCase()}! TEST COMPLETATO CON SUCCESSO.`;
             
-            // Generazione del report finale ridotto alla sola percentuale (senza i dettagli delle risposte)
-            let resultString = `STUDENTE: ${studentName}\n`;
+            let resultString = `STUDENTE: ${studentName.toUpperCase()}\n`;
             resultString += `DATA DI SVOLGIMENTO: ${new Date().toLocaleString()}\n`;
             resultString += `RISULTATO FINALE: ${percentageScore}% RISPOSTE CORRETTE (${score}/${quizData.length})`;
 
