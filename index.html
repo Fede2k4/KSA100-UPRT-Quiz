@@ -1,343 +1,325 @@
-HTML
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2685.5">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px}
-    span.s1 {font-kerning: none}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upset Recovery Quiz</title>
+    <style>
+        :root {
+            --primary: #4a00e0;
+            --secondary: #8e2de2;
+            --success: #11998e;
+            --danger: #eb3349;
+            --dark: #2c3e50;
+            --light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--dark);
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .screen { display: none; }
+        .screen.active { display: block; }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 12px;
+            margin: 20px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        .timer-bar {
+            width: 100%;
+            height: 10px;
+            background: #eee;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .timer-progress {
+            height: 100%;
+            background: var(--danger);
+            width: 100%;
+            transition: width 0.1s linear; 
+        }
+
+        .quiz-image {
+            max-width: 100%;
+            max-height: 250px;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .option-btn {
+            background: #f0f2f5;
+            color: var(--dark);
+            border: 2px solid #e4e6eb;
+            padding: 15px;
+            font-weight: 600;
+            text-align: left;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: 0.15s;
+        }
+
+        .option-btn:hover { 
+            background: var(--primary); 
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .results-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px dashed var(--primary);
+            margin-top: 20px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            text-align: left;
+            font-size: 14px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
 </head>
 <body>
-<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
-<p class="p1"><span class="s1">&lt;html lang="it"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;head&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;title&gt;Upset Recovery Quiz&lt;/title&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;style&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>:root {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>--primary: #4a00e0;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>--secondary: #8e2de2;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>--success: #11998e;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>--danger: #eb3349;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>--dark: #2c3e50;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>--light: #f8f9fa;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>body {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: linear-gradient(135deg, var(--primary), var(--secondary));</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin: 0;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 20px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>display: flex;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>justify-content: center;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>align-items: center;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>min-height: 100vh;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: var(--dark);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.container {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: white;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 30px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 15px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>box-shadow: 0 10px 25px rgba(0,0,0,0.2);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>width: 100%;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>max-width: 600px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>text-align: center;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.screen { display: none; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.screen.active { display: block; }</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>input[type="text"] {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>width: 80%;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 12px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin: 20px 0;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border: 2px solid #ddd;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 8px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-size: 16px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>text-align: center;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>button {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: var(--primary);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: white;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border: none;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 12px 30px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-size: 16px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 8px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>cursor: pointer;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>transition: 0.2s;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>button:hover { opacity: 0.9; transform: translateY(-2px); }</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.timer-bar {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>width: 100%;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>height: 10px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: #eee;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 5px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-bottom: 20px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>overflow: hidden;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.timer-progress {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>height: 100%;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: var(--danger);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>width: 100%;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>transition: width 0.1s linear;<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.quiz-image {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>max-width: 100%;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>max-height: 250px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>height: auto;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 8px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-bottom: 15px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>box-shadow: 0 4px 10px rgba(0,0,0,0.1);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>display: none;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.options-grid {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>display: grid;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>grid-template-columns: 1fr;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>gap: 15px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-top: 20px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.option-btn {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: #f0f2f5;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: var(--dark);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border: 2px solid #e4e6eb;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 15px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-weight: 600;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>text-align: left;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 8px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>cursor: pointer;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-size: 15px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>transition: 0.15s;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.option-btn:hover {<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: var(--primary);<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: white;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-color: var(--primary);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.results-box {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: #f8f9fa;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 15px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 8px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border: 1px dashed var(--primary);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-top: 20px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-family: monospace;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>white-space: pre-wrap;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>text-align: left;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-size: 14px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>max-height: 200px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>overflow-y: auto;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
-<p class="p1"><span class="s1">&lt;body&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="container"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div id="screen-login" class="screen active"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;h2&gt;Upset Recovery Test&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;p&gt;Inserisci il tuo nome e cognome per iniziare il quiz a tempo (6 secondi per domanda).&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;input type="text" id="student-name" placeholder="Nome Cognome" required&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;br&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;button onclick="startQuiz()"&gt;Inizia il Test&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div id="screen-quiz" class="screen"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="timer-bar"&gt;&lt;div id="timer" class="timer-progress"&gt;&lt;/div&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;img id="quiz-img" class="quiz-image" src="" alt="Quiz Image" onerror="this.style.display='none';"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;h3 id="question-text"&gt;Domanda...&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="options-grid" id="options-container"&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div id="screen-results" class="screen"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;h2&gt;Quiz Completato!&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;p id="final-score"&gt;Hai totalizzato X punti.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;p&gt;Copia il testo nel riquadro qui sotto o salva il PDF per inviarlo al docente:&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="results-box" id="results-code"&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;br&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;button onclick="window.print()"&gt;Salva / Stampa PDF&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const quizData = [</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>question: "What is the recovery for this situation?",</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>image: "assetto1.png",<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>options: [</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>"PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE",</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>"DECREASE THROTTLE, PITCH UP",</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>"DECREASE THROTTLE, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE",</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>"PUSH TO UNLOAD, PITCH UP AND INCREASE THROTTLE"</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>],</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>correct: 0,<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>time: 6<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>},</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>question: "What is the recovery for this situation?",</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>image: "assetto2.png",<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>options: [</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>"PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND DECREASE THROTTLE",</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>"WINGS LEVELLED, PUSH TO UNLOAD, PITCH UP AND INCREASE THROTTLE",</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>"THROTTLE IDLE, WINGS LEVELLED, PITCH UP",</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>"PUSH TO UNLOAD, INCREASE THROTTLE, WINGS LEVELLED, PITCH UP"</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>],</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>correct: 2,<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>time: 6<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>},</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>question: "Which upset is this?",</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>image: "assetto3.png",<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>options: [</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>"NOSE HIGH",</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>"NOSE HIGH AND BANK",</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>"NOT UPSET",</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>"STALL"</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>],</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>correct: 0,<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>time: 6<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>},</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>question: "What is the recovery for this situation?",</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>image: "assetto4.png",<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>options: [</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>"PULL TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE",</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>"PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP",</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>"PULL TO UNLO WINGS LEVELLED, PITCH UP",</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>"PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE"</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>],</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>correct: 3,<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>time: 6<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>},</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>question: "Which upset is this?",</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>image: "assetto5.png",<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>options: [</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>"NOSE LOW",</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>"NOT UPSET",</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>"NOSE LOW AND BANK",</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>"DEEP DIVE"</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>],</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>correct: 0,<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>time: 6<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>];</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>let currentQuestionIndex = 0;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>let score = 0;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>let studentName = "";</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>let timerInterval;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>let timeLeft = 0;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>let studentAnswers = [];</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function showScreen(screenId) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.querySelectorAll('.screen').forEach(s =&gt; s.classList.remove('active'));</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById(screenId).classList.add('active');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function startQuiz() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>studentName = document.getElementById('student-name').value.trim();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (!studentName) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>alert("Per favore, inserisci il tuo nome.");</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>return;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>showScreen('screen-quiz');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>loadQuestion();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function loadQuestion() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>clearInterval(timerInterval);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (currentQuestionIndex &gt;= quizData.length) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>endQuiz();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>return;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const currentQuestion = quizData[currentQuestionIndex];</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('question-text').innerText = `${currentQuestionIndex + 1}. ${currentQuestion.question}`;</span></p>
-<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const imgElement = document.getElementById('quiz-img');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (currentQuestion.image &amp;&amp; currentQuestion.image !== "") {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>imgElement.src = currentQuestion.image;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>imgElement.style.display = "inline-block";</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>} else {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>imgElement.style.display = "none";</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const optionsContainer = document.getElementById('options-container');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>optionsContainer.innerHTML = '';</span></p>
-<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>currentQuestion.options.forEach((option, index) =&gt; {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const btn = document.createElement('button');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>btn.className = 'option-btn';</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>btn.innerText = option;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>btn.onclick = () =&gt; selectAnswer(index);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>optionsContainer.appendChild(btn);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>});</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>timeLeft = currentQuestion.time * 1000;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>updateTimerBar();</span></p>
-<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const tickRate = 100;<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>timerInterval = setInterval(() =&gt; {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>timeLeft -= tickRate;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>updateTimerBar();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>if (timeLeft &lt;= 0) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>selectAnswer(-1);<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}, tickRate);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function updateTimerBar() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const totalTime = quizData[currentQuestionIndex].time * 1000;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const percentage = Math.max(0, (timeLeft / totalTime) * 100);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('timer').style.width = percentage + '%';</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function selectAnswer(selectedIndex) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>clearInterval(timerInterval);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const currentQuestion = quizData[currentQuestionIndex];</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const isCorrect = selectedIndex === currentQuestion.correct;</span></p>
-<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (isCorrect) score++;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>studentAnswers.push({</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>question: currentQuestion.question,</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>studentAnswer: selectedIndex === -1 ? "Tempo Scaduto" : currentQuestion.options[selectedIndex],</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>correctAnswer: currentQuestion.options[currentQuestion.correct],</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>status: isCorrect ? "CORRETTA" : "ERRATA"</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>});</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>currentQuestionIndex++;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>loadQuestion();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function endQuiz() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>showScreen('screen-results');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('final-score').innerText = `Ottimo lavoro ${studentName}! Punteggio finale: ${score} / ${quizData.length}`;</span></p>
-<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>let resultString = `STUDENTE: ${studentName}\nDATA DI SVOLGIMENTO: ${new Date().toLocaleString()}\nPUNTEGGIO GENERALE: ${score}/${quizData.length}\n\nRELAZIONE DI DETTAGLIO:\n`;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>studentAnswers.forEach((ans, idx) =&gt; {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>resultString += `${idx+1}) ${ans.question}\n <span class="Apple-converted-space">  </span>Risposta data dallo studente: ${ans.studentAnswer} [${ans.status}]\n`;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>});</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('results-code').innerText = resultString;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+
+    <div class="container">
+        <div id="screen-login" class="screen active">
+            <h2>Upset Recovery Test</h2>
+            <p>Inserisci il tuo nome e cognome per iniziare il quiz a tempo (6 secondi per domanda).</p>
+            <input type="text" id="student-name" placeholder="Nome Cognome" required>
+            <br>
+            <button onclick="startQuiz()">Inizia il Test</button>
+        </div>
+
+        <div id="screen-quiz" class="screen">
+            <div class="timer-bar"><div id="timer" class="timer-progress"></div></div>
+            <img id="quiz-img" class="quiz-image" src="" alt="Quiz Image" onerror="this.style.display='none';">
+            <h3 id="question-text">Domanda...</h3>
+            <div class="options-grid" id="options-container"></div>
+        </div>
+
+        <div id="screen-results" class="screen">
+            <h2>Quiz Completato!</h2>
+            <p id="final-score">Hai totalizzato X punti.</p>
+            <p>Copia il testo nel riquadro qui sotto o salva il PDF per inviarlo al docente:</p>
+            <div class="results-box" id="results-code"></div>
+            <br>
+            <button onclick="window.print()">Salva / Stampa PDF</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "What is the recovery for this situation?",
+                image: "assetto1.png", 
+                options: [
+                    "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE",
+                    "DECREASE THROTTLE, PITCH UP",
+                    "DECREASE THROTTLE, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE",
+                    "PUSH TO UNLOAD, PITCH UP AND INCREASE THROTTLE"
+                ],
+                correct: 0, 
+                time: 6 
+            },
+            {
+                question: "What is the recovery for this situation?",
+                image: "assetto2.png", 
+                options: [
+                    "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND DECREASE THROTTLE",
+                    "WINGS LEVELLED, PUSH TO UNLOAD, PITCH UP AND INCREASE THROTTLE",
+                    "THROTTLE IDLE, WINGS LEVELLED, PITCH UP",
+                    "PUSH TO UNLOAD, INCREASE THROTTLE, WINGS LEVELLED, PITCH UP"
+                ],
+                correct: 2, 
+                time: 6 
+            },
+            {
+                question: "Which upset is this?",
+                image: "assetto3.png", 
+                options: [
+                    "NOSE HIGH",
+                    "NOSE HIGH AND BANK",
+                    "NOT UPSET",
+                    "STALL"
+                ],
+                correct: 0, 
+                time: 6 
+            },
+            {
+                question: "What is the recovery for this situation?",
+                image: "assetto4.png", 
+                options: [
+                    "PULL TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE",
+                    "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP",
+                    "PULL TO UNLO WINGS LEVELLED, PITCH UP",
+                    "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE"
+                ],
+                correct: 3, 
+                time: 6 
+            },
+            {
+                question: "Which upset is this?",
+                image: "assetto5.png", 
+                options: [
+                    "NOSE LOW",
+                    "NOT UPSET",
+                    "NOSE LOW AND BANK",
+                    "DEEP DIVE"
+                ],
+                correct: 0, 
+                time: 6 
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let studentName = "";
+        let timerInterval;
+        let timeLeft = 0;
+        let studentAnswers = [];
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function startQuiz() {
+            studentName = document.getElementById('student-name').value.trim();
+            if (!studentName) {
+                alert("Per favore, inserisci il tuo nome.");
+                return;
+            }
+            showScreen('screen-quiz');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            clearInterval(timerInterval);
+            if (currentQuestionIndex >= quizData.length) {
+                endQuiz();
+                return;
+            }
+
+            const currentQuestion = quizData[currentQuestionIndex];
+            document.getElementById('question-text').innerText = `${currentQuestionIndex + 1}. ${currentQuestion.question}`;
+            
+            const imgElement = document.getElementById('quiz-img');
+            if (currentQuestion.image && currentQuestion.image !== "") {
+                imgElement.src = currentQuestion.image;
+                imgElement.style.display = "inline-block";
+            } else {
+                imgElement.style.display = "none";
+            }
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            currentQuestion.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = option;
+                btn.onclick = () => selectAnswer(index);
+                optionsContainer.appendChild(btn);
+            });
+
+            timeLeft = currentQuestion.time * 1000;
+            updateTimerBar();
+            
+            const tickRate = 100; 
+            timerInterval = setInterval(() => {
+                timeLeft -= tickRate;
+                updateTimerBar();
+                if (timeLeft <= 0) {
+                    selectAnswer(-1); 
+                }
+            }, tickRate);
+        }
+
+        function updateTimerBar() {
+            const totalTime = quizData[currentQuestionIndex].time * 1000;
+            const percentage = Math.max(0, (timeLeft / totalTime) * 100);
+            document.getElementById('timer').style.width = percentage + '%';
+        }
+
+        function selectAnswer(selectedIndex) {
+            clearInterval(timerInterval);
+            const currentQuestion = quizData[currentQuestionIndex];
+            const isCorrect = selectedIndex === currentQuestion.correct;
+            
+            if (isCorrect) score++;
+
+            studentAnswers.push({
+                question: currentQuestion.question,
+                studentAnswer: selectedIndex === -1 ? "Tempo Scaduto" : currentQuestion.options[selectedIndex],
+                correctAnswer: currentQuestion.options[currentQuestion.correct],
+                status: isCorrect ? "CORRETTA" : "ERRATA"
+            });
+
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        function endQuiz() {
+            showScreen('screen-results');
+            document.getElementById('final-score').innerText = `Ottimo lavoro ${studentName}! Punteggio finale: ${score} / ${quizData.length}`;
+            
+            let resultString = `STUDENTE: ${studentName}\nDATA DI SVOLGIMENTO: ${new Date().toLocaleString()}\nPUNTEGGIO GENERALE: ${score}/${quizData.length}\n\nRELAZIONE DI DETTAGLIO:\n`;
+            studentAnswers.forEach((ans, idx) => {
+                resultString += `${idx+1}) ${ans.question}\n   Risposta data dallo studente: ${ans.studentAnswer} [${ans.status}]\n`;
+            });
+
+            document.getElementById('results-code').innerText = resultString;
+        }
+    </script>
 </body>
 </html>
