@@ -147,7 +147,7 @@
             margin-bottom: 20px;
         }
 
-        /* STILI PER IL CERTIFICATO */
+        /* STILI PER IL CERTIFICATO - CENTRATURA ASSOLUTA FORZATA */
         #certificate-wrapper {
             position: absolute;
             left: -9999px; 
@@ -156,16 +156,25 @@
 
         #certificate-template {
             width: 900px;
-            height: 1272px; 
+            height: 1272px; /* Proporzione A4 perfetta */
             background-color: white;
-            padding: 0; 
+            padding: 60px; /* Padding per sicurezza */
             box-sizing: border-box;
-            text-align: center;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             display: flex;
             flex-direction: column;
-            justify-content: center; 
-            align-items: center;    
+            justify-content: center; /* Centra verticalmente */
+            align-items: center;    /* Centra orizzontalmente i blocchi */
+            text-align: center;     /* Centra inline per sicurezza */
+        }
+
+        /* Regole generali per i blocchi di testo nel certificato per garantire la larghezza piena e centratura */
+        #certificate-template div, 
+        #certificate-template p {
+            width: 100%;
+            text-align: center; /* Forza il testo al centro del blocco */
+            margin-left: auto !important;
+            margin-right: auto !important;
         }
 
         .cert-title {
@@ -221,6 +230,9 @@
         .cert-logo {
             max-width: 780px; 
             height: auto;
+            display: block; /* Importante per i margini auto */
+            margin-left: auto !important;
+            margin-right: auto !important;
         }
     </style>
 </head>
@@ -265,7 +277,7 @@
             <div class="cert-score" id="cert-student-score">with a score of 100%</div>
             <div class="cert-date" id="cert-student-date">01/01/2026, 00:00:00</div>
             
-            <div class="cert-footer">
+            <div class="cert-footer cert-text">
                 Aero Locarno<br>
                 CH.ATO.0311<br>
                 Locarno, Switzerland
@@ -340,7 +352,6 @@
             score = 0;
             studentReportDetails = [];
             
-            // Reset stili schermata risultati nel caso di tentativi multipli
             document.getElementById('result-title').style.color = "var(--dark)";
             
             showScreen('screen-quiz');
@@ -427,19 +438,17 @@
                 document.getElementById('cert-instruction').style.display = "block";
                 document.getElementById('download-cert-btn').style.display = "inline-block";
                 
-                // Compiliamo il template invisibile del certificato
                 document.getElementById('cert-student-name').innerText = studentName.toUpperCase();
                 document.getElementById('cert-student-score').innerText = `with a score of ${percentageScore}%`;
                 document.getElementById('cert-student-date').innerText = currentDateStr;
             } else {
                 document.getElementById('result-title').innerText = "TEST FAILED";
-                document.getElementById('result-title').style.color = "var(--danger)"; // Testo in rosso
+                document.getElementById('result-title').style.color = "var(--danger)"; 
                 document.getElementById('final-score').innerText = `Sorry, ${studentName.toUpperCase()}. You scored ${percentageScore}%, which is below the 35% required to pass.`;
                 document.getElementById('cert-instruction').style.display = "none";
                 document.getElementById('download-cert-btn').style.display = "none";
             }
 
-            // Invio automatico mail (solo dati testuali)
             if(GOOGLE_SCRIPT_URL !== "") {
                 const payload = {
                     student: studentName,
