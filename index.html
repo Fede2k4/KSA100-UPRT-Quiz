@@ -147,79 +147,79 @@
             margin-bottom: 20px;
         }
 
-        /* Stili per il template invisibile del certificato */
+        /* STILI PER IL CERTIFICATO */
         #certificate-wrapper {
             position: absolute;
-            left: -9999px; /* Mantiene il div fuori dallo schermo ma renderizzato */
+            left: -9999px; 
             top: 0;
         }
 
         #certificate-template {
             width: 900px;
-            height: 1270px; /* Proporzioni A4 ampliate per far respirare il logo grande */
+            height: 1272px; 
             background-color: white;
-            padding: 60px 80px;
+            padding: 0; 
             box-sizing: border-box;
             text-align: center;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            justify-content: center; 
+            align-items: center;    
         }
 
         .cert-title {
             color: #d12027;
-            font-size: 80px;
+            font-size: 85px;
             font-weight: 400;
-            margin-bottom: 50px;
-            letter-spacing: 2px;
+            margin-bottom: 40px;
+            letter-spacing: 3px;
         }
 
         .cert-text {
-            font-size: 30px;
+            font-size: 32px;
             color: #000;
-            margin-bottom: 35px;
+            margin-bottom: 30px;
         }
 
         .cert-name {
-            font-size: 50px;
+            font-size: 55px;
             font-weight: bold;
             color: #000;
-            margin-bottom: 35px;
+            margin-bottom: 30px;
             text-transform: uppercase;
         }
 
         .cert-course {
             color: #d12027;
-            font-size: 50px;
+            font-size: 55px;
             font-weight: bold;
             margin-top: 10px;
             margin-bottom: 10px;
         }
         
         .cert-score {
-            font-size: 26px;
+            font-size: 28px;
             font-weight: bold;
             color: #333;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .cert-date {
             font-size: 20px;
             color: #666;
-            margin-bottom: 55px;
+            margin-bottom: 60px;
         }
 
         .cert-footer {
-            font-size: 18px;
+            font-size: 20px;
             color: #000;
             line-height: 1.4;
-            margin-bottom: 40px;
+            margin-bottom: 60px;
         }
 
         .cert-logo {
-            max-width: 750px; /* Logo ingrandito di 1.5x rispetto alla versione precedente */
+            max-width: 780px; 
             height: auto;
         }
     </style>
@@ -247,11 +247,11 @@
         </div>
 
         <div id="screen-results" class="screen">
-            <h2>QUIZ COMPLETED!</h2>
-            <p id="final-score">Sending report to your instructor...</p>
+            <h2 id="result-title">QUIZ COMPLETED!</h2>
+            <p id="final-score">Calculating results...</p>
             <div id="mail-status" class="sending-status">Sending email report...</div>
-            <p>You can also download a copy of your certificate below:</p>
-            <button onclick="downloadCertificate()" style="background-color: #11998e;">DOWNLOAD CERTIFICATE</button>
+            <p id="cert-instruction">You can also download a copy of your certificate below:</p>
+            <button id="download-cert-btn" onclick="downloadCertificate()" style="background-color: #11998e;">DOWNLOAD CERTIFICATE</button>
         </div>
     </div>
 
@@ -340,6 +340,9 @@
             score = 0;
             studentReportDetails = [];
             
+            // Reset stili schermata risultati nel caso di tentativi multipli
+            document.getElementById('result-title').style.color = "var(--dark)";
+            
             showScreen('screen-quiz');
             loadQuestion();
         }
@@ -416,13 +419,25 @@
             const percentageScore = Math.round((score / quizData.length) * 100);
             const currentDateStr = new Date().toLocaleString();
             
-            // Popoliamo la schermata dei risultati visibile
-            document.getElementById('final-score').innerText = `Well done, ${studentName.toUpperCase()}! You have successfully completed the test.`;
-            
-            // Compiliamo il template invisibile del certificato con i dati reali
-            document.getElementById('cert-student-name').innerText = studentName.toUpperCase();
-            document.getElementById('cert-student-score').innerText = `with a score of ${percentageScore}%`;
-            document.getElementById('cert-student-date').innerText = currentDateStr; // Inserimento Data e Ora esatta
+            const isPassed = percentageScore >= 35;
+
+            if (isPassed) {
+                document.getElementById('result-title').innerText = "CONGRATULATIONS!";
+                document.getElementById('final-score').innerText = `Well done, ${studentName.toUpperCase()}! You have successfully completed the test with a score of ${percentageScore}%.`;
+                document.getElementById('cert-instruction').style.display = "block";
+                document.getElementById('download-cert-btn').style.display = "inline-block";
+                
+                // Compiliamo il template invisibile del certificato
+                document.getElementById('cert-student-name').innerText = studentName.toUpperCase();
+                document.getElementById('cert-student-score').innerText = `with a score of ${percentageScore}%`;
+                document.getElementById('cert-student-date').innerText = currentDateStr;
+            } else {
+                document.getElementById('result-title').innerText = "TEST FAILED";
+                document.getElementById('result-title').style.color = "var(--danger)"; // Testo in rosso
+                document.getElementById('final-score').innerText = `Sorry, ${studentName.toUpperCase()}. You scored ${percentageScore}%, which is below the 35% required to pass.`;
+                document.getElementById('cert-instruction').style.display = "none";
+                document.getElementById('download-cert-btn').style.display = "none";
+            }
 
             // Invio automatico mail (solo dati testuali)
             if(GOOGLE_SCRIPT_URL !== "") {
@@ -444,9 +459,8 @@
                     document.getElementById('mail-status').style.color = "green";
                 })
                 .catch((err) => {
-                    document.getElementById('mail-status').innerText = "✕ Networking error during mail dispatch.";
+                    document.getElementById('mail-status').innerText = "✕ Networking error during report dispatch.";
                     document.getElementById('mail-status').style.color = "red";
-                    console.error(err);
                 });
             }
         }
