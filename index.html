@@ -147,6 +147,12 @@
             max-height: 150px;
             overflow-y: auto;
         }
+        
+        .sending-status {
+            font-weight: bold;
+            color: var(--secondary);
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -173,8 +179,9 @@
 
         <div id="screen-results" class="screen">
             <h2>QUIZ COMPLETED!</h2>
-            <p id="final-score">You have finished the test.</p>
-            <p>Copy the report below or save the PDF to send to your instructor:</p>
+            <p id="final-score">Sending report to your instructor...</p>
+            <div id="mail-status" class="sending-status">Sending email report...</div>
+            <p>Copy the summary below or save the PDF:</p>
             <div class="results-box" id="results-code"></div>
             <br>
             <button onclick="window.print()">Save / Print PDF</button>
@@ -182,8 +189,9 @@
     </div>
 
     <script>
-        // Password ufficiale per sbloccare il quiz
         const SECRET_PASSWORD = "AELO2026";
+        // INCOLLA QUI L'URL COPIATO DA GOOGLE APPS SCRIPT
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzma0WxkF2mrOoOSdmZsiqTRamx80Jhs6NhBxUjKOs2_1SZ_OX_SJyESSJkDbBu42hQBg/exec";
 
         const masterQuizData = [
             {
@@ -266,6 +274,7 @@
         let studentName = "";
         let timerInterval;
         let timeLeft = 0;
+        let studentReportDetails = []; // Memorizza lo storico risposte dettagliato
 
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
@@ -298,7 +307,6 @@
                 return;
             }
 
-            // Controllo di sicurezza della password
             if (typedPassword !== SECRET_PASSWORD) {
                 alert("Invalid Session Password! Access denied.");
                 return;
@@ -307,6 +315,7 @@
             quizData = prepareQuizData();
             currentQuestionIndex = 0;
             score = 0;
+            studentReportDetails = [];
             
             showScreen('screen-quiz');
             loadQuestion();
@@ -349,7 +358,7 @@
                 timeLeft -= tickRate;
                 updateTimerBar();
                 if (timeLeft <= 0) {
-                    selectAnswer(""); 
+                    selectAnswer("TIMEOUT - NO ANSWER"); 
                 }
             }, tickRate);
         }
@@ -367,6 +376,14 @@
             
             if (isCorrect) score++;
 
+            // Registra i dettagli per la mail di report
+            studentReportDetails.push({
+                question: currentQuestion.question,
+                selected: selectedOptionText,
+                correct: currentQuestion.correctText,
+                isCorrect: isCorrect
+            });
+
             currentQuestionIndex++;
             loadQuestion();
         }
@@ -375,14 +392,43 @@
             showScreen('screen-results');
             
             const percentageScore = Math.round((score / quizData.length) * 100);
+            const currentDateStr = new Date().toLocaleString();
             
             document.getElementById('final-score').innerText = `Well done, ${studentName.toUpperCase()}! You have successfully completed the test.`;
             
             let resultString = `STUDENT: ${studentName.toUpperCase()}\n`;
-            resultString += `DATE: ${new Date().toLocaleString()}\n`;
+            resultString += `DATE: ${currentDateStr}\n`;
             resultString += `FINAL SCORE: ${percentageScore}% CORRECT ANSWERS (${score}/${quizData.length})`;
 
             document.getElementById('results-code').innerText = resultString;
+
+            // Invio automatico asincrono dei dati via email
+            if(GOOGLE_SCRIPT_URL !== "INCOLLA_QUI_L_URL_DI_GOOGLE_SCRIPT" && GOOGLE_SCRIPT_URL !== "") {
+                const payload = {
+                    student: studentName,
+                    date: currentDateStr,
+                    score: percentageScore,
+                    details: studentReportDetails
+                };
+
+                fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Evita blocchi CORS cross-origin basilari dei browser
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                })
+                .then(() => {
+                    document.getElementById('mail-status').innerText = "✓ Report successfully sent to ksa100.aelo@gmail.com";
+                    document.getElementById('mail-status').style.color = "green";
+                })
+                .catch((err) => {
+                    document.getElementById('mail-status').innerText = "✕ Networking error during mail dispatch.";
+                    document.getElementById('mail-status').style.color = "red";
+                    console.error(err);
+                });
+            } else {
+                document.getElementById('mail-status').innerText = "⚠ Email trigger inactive (URL not configured).";
+            }
         }
     </script>
 </body>
