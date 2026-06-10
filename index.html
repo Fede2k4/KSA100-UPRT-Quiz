@@ -49,10 +49,10 @@
         .screen { display: none; }
         .screen.active { display: block; }
 
-        input[type="text"] {
+        input[type="text"], input[type="password"] {
             width: 80%;
             padding: 12px;
-            margin: 20px 0;
+            margin: 10px 0;
             border: 2px solid #ddd;
             border-radius: 8px;
             font-size: 16px;
@@ -70,6 +70,7 @@
             transition: 0.2s;
             text-transform: uppercase;
             font-weight: bold;
+            margin-top: 15px;
         }
 
         button:hover { opacity: 0.9; transform: translateY(-2px); }
@@ -154,8 +155,11 @@
         <div id="screen-login" class="screen active">
             <img src="https://lh3.googleusercontent.com/d/1Xg7X85x38pZ0N586Z795pZ6442654316" alt="AELO Swiss Academy" class="logo-main" onerror="this.src='logo.png';">
             <h2>KSA 100 - UPRT TEST</h2>
-            <p>Enter your full name to start the timed quiz<br>(10 seconds per question).</p>
+            <p>Enter your details and the session password to start.<br>(10 seconds per question).</p>
+            
             <input type="text" id="student-name" placeholder="Full Name" required>
+            <br>
+            <input type="password" id="session-password" placeholder="Session Password" required>
             <br>
             <button onclick="startQuiz()">Start Test</button>
         </div>
@@ -178,7 +182,9 @@
     </div>
 
     <script>
-        // Database fisso delle domande originarie
+        // Password ufficiale per sbloccare il quiz
+        const SECRET_PASSWORD = "AELO2026";
+
         const masterQuizData = [
             {
                 question: "WHAT IS THE RECOVERY FOR THIS SITUATION?",
@@ -189,7 +195,7 @@
                     "DECREASE THROTTLE, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE",
                     "PUSH TO UNLOAD, PITCH UP AND INCREASE THROTTLE"
                 ],
-                correctText: "DECREASE THROTTLE, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE", // C
+                correctText: "DECREASE THROTTLE, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE",
                 time: 10 
             },
             {
@@ -201,7 +207,7 @@
                     "THROTTLE IDLE, WINGS LEVELLED, PITCH UP",
                     "PUSH TO UNLOAD, INCREASE THROTTLE, WINGS LEVELLED, PITCH UP"
                 ],
-                correctText: "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE", // A
+                correctText: "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE",
                 time: 10 
             },
             {
@@ -213,7 +219,7 @@
                     "NOT UPSET",
                     "STALL"
                 ],
-                correctText: "NOT UPSET", // C
+                correctText: "NOT UPSET",
                 time: 10 
             },
             {
@@ -225,7 +231,7 @@
                     "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP",
                     "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE"
                 ],
-                correctText: "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE", // D
+                correctText: "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE",
                 time: 10 
             },
             {
@@ -237,7 +243,7 @@
                     "PULL TO UNLOAD WINGS LEVELLED, PITCH UP",
                     "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE"
                 ],
-                correctText: "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE", // D
+                correctText: "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE",
                 time: 10 
             },
             {
@@ -249,7 +255,7 @@
                     "NOSE LOW AND BANK",
                     "DEEP DIVE"
                 ],
-                correctText: "NOT UPSET", // B
+                correctText: "NOT UPSET",
                 time: 10 
             }
         ];
@@ -261,7 +267,6 @@
         let timerInterval;
         let timeLeft = 0;
 
-        // Algoritmo di mescolamento Fisher-Yates
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -271,17 +276,11 @@
         }
 
         function prepareQuizData() {
-            // Clona la lista principale per non corromperla tra un tentativo e l'altro
             let clonedData = JSON.parse(JSON.stringify(masterQuizData));
-            
-            // 1. Mischia le domande principali
             shuffle(clonedData);
-            
-            // 2. Mischia le opzioni dentro ogni singola domanda
             clonedData.forEach(item => {
                 shuffle(item.options);
             });
-            
             return clonedData;
         }
 
@@ -292,12 +291,19 @@
 
         function startQuiz() {
             studentName = document.getElementById('student-name').value.trim();
+            const typedPassword = document.getElementById('session-password').value.trim();
+
             if (!studentName) {
                 alert("Please enter your name.");
                 return;
             }
+
+            // Controllo di sicurezza della password
+            if (typedPassword !== SECRET_PASSWORD) {
+                alert("Invalid Session Password! Access denied.");
+                return;
+            }
             
-            // Genera una sequenza casuale unica per questo specifico tentativo
             quizData = prepareQuizData();
             currentQuestionIndex = 0;
             score = 0;
@@ -343,7 +349,7 @@
                 timeLeft -= tickRate;
                 updateTimerBar();
                 if (timeLeft <= 0) {
-                    selectAnswer(""); // Tempo scaduto, nessuna stringa passata
+                    selectAnswer(""); 
                 }
             }, tickRate);
         }
@@ -357,8 +363,6 @@
         function selectAnswer(selectedOptionText) {
             clearInterval(timerInterval);
             const currentQuestion = quizData[currentQuestionIndex];
-            
-            // Verifica la correttezza confrontando il testo della risposta, infallibile contro il random
             const isCorrect = selectedOptionText === currentQuestion.correctText;
             
             if (isCorrect) score++;
