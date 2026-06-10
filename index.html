@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AELO KSA100 - UPRT TEST</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <style>
         :root {
             --aelo-red: #E31D2B; 
@@ -149,12 +152,84 @@
             font-size: 14px;
             max-height: 150px;
             overflow-y: auto;
+            display: none; /* Nascosto per lasciare spazio al pulsante del certificato */
         }
         
         .sending-status {
             font-weight: bold;
             color: var(--secondary);
             margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Stili per il template invisibile del certificato */
+        #certificate-wrapper {
+            position: absolute;
+            left: -9999px; /* Mantiene il div fuori dallo schermo ma renderizzato */
+            top: 0;
+        }
+
+        #certificate-template {
+            width: 800px;
+            height: 1130px; /* Proporzioni A4 */
+            background-color: white;
+            padding: 80px;
+            box-sizing: border-box;
+            text-align: center;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cert-title {
+            color: #d12027; /* Rosso del tuo screenshot */
+            font-size: 75px;
+            font-weight: 400;
+            margin-bottom: 60px;
+            letter-spacing: 2px;
+        }
+
+        .cert-text {
+            font-size: 28px;
+            color: #000;
+            margin-bottom: 40px;
+        }
+
+        .cert-name {
+            font-size: 45px;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
+
+        .cert-course {
+            color: #d12027; /* Rosso del tuo screenshot */
+            font-size: 45px;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .cert-score {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 80px;
+        }
+
+        .cert-footer {
+            font-size: 18px;
+            color: #000;
+            line-height: 1.4;
+            margin-bottom: 50px;
+        }
+
+        .cert-logo {
+            max-width: 350px;
+            height: auto;
         }
     </style>
 </head>
@@ -184,10 +259,26 @@
             <h2>QUIZ COMPLETED!</h2>
             <p id="final-score">Sending report to your instructor...</p>
             <div id="mail-status" class="sending-status">Sending email report...</div>
-            <p>Copy the summary below or save the PDF:</p>
-            <div class="results-box" id="results-code"></div>
-            <br>
-            <button onclick="window.print()">Save / Print PDF</button>
+            <p>Click below to generate and download your official certificate:</p>
+            <button onclick="downloadCertificate()" style="background-color: #11998e;">DOWNLOAD CERTIFICATE</button>
+        </div>
+    </div>
+
+    <div id="certificate-wrapper">
+        <div id="certificate-template">
+            <div class="cert-title">CERTIFICATE</div>
+            <div class="cert-text">This is to certify that</div>
+            <div class="cert-name" id="cert-student-name">NAME SURNAME</div>
+            <div class="cert-text">has successfully completed</div>
+            <div class="cert-course">KSA100 UPRT TEST</div>
+            <div class="cert-score" id="cert-student-score">with a score of 100%</div>
+            
+            <div class="cert-footer">
+                Aero Locarno<br>
+                CH.ATO.0311<br>
+                Locarno, Switzerland
+            </div>
+            <img src="https://lh3.googleusercontent.com/d/1Xg7X85x38pZ0N586Z795pZ6442654316" alt="AELO Swiss Academy" class="cert-logo" onerror="this.src='logo.png';">
         </div>
     </div>
 
@@ -443,14 +534,14 @@
             const percentageScore = Math.round((score / quizData.length) * 100);
             const currentDateStr = new Date().toLocaleString();
             
+            // Popoliamo la schermata dei risultati visibile
             document.getElementById('final-score').innerText = `Well done, ${studentName.toUpperCase()}! You have successfully completed the test.`;
             
-            let resultString = `STUDENT: ${studentName.toUpperCase()}\n`;
-            resultString += `DATE: ${currentDateStr}\n`;
-            resultString += `FINAL SCORE: ${percentageScore}% CORRECT ANSWERS (${score}/${quizData.length})`;
+            // Compiliamo il template invisibile del certificato
+            document.getElementById('cert-student-name').innerText = studentName.toUpperCase();
+            document.getElementById('cert-student-score').innerText = `with a score of ${percentageScore}%`;
 
-            document.getElementById('results-code').innerText = resultString;
-
+            // Invio automatico mail
             if(GOOGLE_SCRIPT_URL !== "" && GOOGLE_SCRIPT_URL !== "INCOLLA_QUI_L_URL_DI_GOOGLE_SCRIPT") {
                 const payload = {
                     student: studentName,
@@ -474,9 +565,24 @@
                     document.getElementById('mail-status').style.color = "red";
                     console.error(err);
                 });
-            } else {
-                document.getElementById('mail-status').innerText = "⚠ Email trigger inactive (URL not configured).";
             }
+        }
+
+        function downloadCertificate() {
+            // Seleziona il div del certificato
+            const element = document.getElementById('certificate-template');
+            
+            // Impostazioni per il PDF (formato A4)
+            const opt = {
+                margin:       0,
+                filename:     `KSA100_Certificate_${studentName.replace(/\s+/g, '_')}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Genera e scarica il PDF
+            html2pdf().set(opt).from(element).save();
         }
     </script>
 </body>
