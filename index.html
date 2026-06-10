@@ -140,21 +140,6 @@
             border-color: var(--primary);
         }
 
-        .results-box {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px dashed var(--primary);
-            margin-top: 20px;
-            font-family: monospace;
-            white-space: pre-wrap;
-            text-align: left;
-            font-size: 14px;
-            max-height: 150px;
-            overflow-y: auto;
-            display: none; /* Nascosto per lasciare spazio al pulsante del certificato */
-        }
-        
         .sending-status {
             font-weight: bold;
             color: var(--secondary);
@@ -170,10 +155,10 @@
         }
 
         #certificate-template {
-            width: 800px;
-            height: 1130px; /* Proporzioni A4 */
+            width: 900px;
+            height: 1270px; /* Proporzioni A4 ampliate per far respirare il logo grande */
             background-color: white;
-            padding: 80px;
+            padding: 60px 80px;
             box-sizing: border-box;
             text-align: center;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -184,51 +169,57 @@
         }
 
         .cert-title {
-            color: #d12027; /* Rosso del tuo screenshot */
-            font-size: 75px;
+            color: #d12027;
+            font-size: 80px;
             font-weight: 400;
-            margin-bottom: 60px;
+            margin-bottom: 50px;
             letter-spacing: 2px;
         }
 
         .cert-text {
-            font-size: 28px;
+            font-size: 30px;
             color: #000;
-            margin-bottom: 40px;
+            margin-bottom: 35px;
         }
 
         .cert-name {
-            font-size: 45px;
+            font-size: 50px;
             font-weight: bold;
             color: #000;
-            margin-bottom: 40px;
+            margin-bottom: 35px;
             text-transform: uppercase;
         }
 
         .cert-course {
-            color: #d12027; /* Rosso del tuo screenshot */
-            font-size: 45px;
+            color: #d12027;
+            font-size: 50px;
             font-weight: bold;
             margin-top: 10px;
             margin-bottom: 10px;
         }
         
         .cert-score {
-            font-size: 22px;
+            font-size: 26px;
             font-weight: bold;
             color: #333;
-            margin-bottom: 80px;
+            margin-bottom: 15px;
+        }
+
+        .cert-date {
+            font-size: 20px;
+            color: #666;
+            margin-bottom: 55px;
         }
 
         .cert-footer {
             font-size: 18px;
             color: #000;
             line-height: 1.4;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
         }
 
         .cert-logo {
-            max-width: 350px;
+            max-width: 750px; /* Logo ingrandito di 1.5x rispetto alla versione precedente */
             height: auto;
         }
     </style>
@@ -259,7 +250,7 @@
             <h2>QUIZ COMPLETED!</h2>
             <p id="final-score">Sending report to your instructor...</p>
             <div id="mail-status" class="sending-status">Sending email report...</div>
-            <p>Click below to generate and download your official certificate:</p>
+            <p>You can also download a copy of your certificate below:</p>
             <button onclick="downloadCertificate()" style="background-color: #11998e;">DOWNLOAD CERTIFICATE</button>
         </div>
     </div>
@@ -272,6 +263,7 @@
             <div class="cert-text">has successfully completed</div>
             <div class="cert-course">KSA100 UPRT TEST</div>
             <div class="cert-score" id="cert-student-score">with a score of 100%</div>
+            <div class="cert-date" id="cert-student-date">01/01/2026, 00:00:00</div>
             
             <div class="cert-footer">
                 Aero Locarno<br>
@@ -287,126 +279,16 @@
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzma0WxkF2mrOoOSdmZsiqTRamx80Jhs6NhBxUjKOs2_1SZ_OX_SJyESSJkDbBu42hQBg/exec";
 
         const masterQuizData = [
-            {
-                question: "WHAT IS THE RECOVERY FOR THIS SITUATION?",
-                image: "assetto1.png", 
-                options: [
-                    "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE",
-                    "DECREASE THROTTLE, PITCH UP",
-                    "DECREASE THROTTLE, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE",
-                    "PUSH TO UNLOAD, PITCH UP AND INCREASE THROTTLE"
-                ],
-                correctText: "DECREASE THROTTLE, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE",
-                time: 30 
-            },
-            {
-                question: "WHAT IS THE RECOVERY FOR THIS SITUATION?",
-                image: "assetto2.png", 
-                options: [
-                    "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE",
-                    "WINGS LEVELLED, PUSH TO UNLOAD, PITCH UP AND INCREASE THROTTLE",
-                    "THROTTLE IDLE, WINGS LEVELLED, PITCH UP",
-                    "PUSH TO UNLOAD, INCREASE THROTTLE, WINGS LEVELLED, PITCH UP"
-                ],
-                correctText: "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE",
-                time: 30 
-            },
-            {
-                question: "WHICH UPSET IS THIS?",
-                image: "assetto3.png", 
-                options: [
-                    "NOSE HIGH",
-                    "NOSE HIGH AND BANK",
-                    "NOT UPSET",
-                    "STALL"
-                ],
-                correctText: "NOT UPSET",
-                time: 30 
-            },
-            {
-                question: "WHAT IS THE RECOVERY FOR THIS SITUATION?",
-                image: "assetto4.png", 
-                options: [
-                    "PULL TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE",
-                    "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP",
-                    "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP",
-                    "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE"
-                ],
-                correctText: "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE",
-                time: 30 
-            },
-            {
-                question: "WHAT IS THE RECOVERY FOR THIS SITUATION?",
-                image: "assetto5.png", 
-                options: [
-                    "PULL TO UNLOAD, WINGS LEVELLED, PITCH UP AND DECREASE THROTTLE",
-                    "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP",
-                    "PULL TO UNLOAD WINGS LEVELLED, PITCH UP",
-                    "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE"
-                ],
-                correctText: "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE",
-                time: 30 
-            },
-            {
-                question: "WHICH UPSET IS THIS?",
-                image: "assetto6.png", 
-                options: [
-                    "NOSE LOW",
-                    "NOT UPSET",
-                    "NOSE LOW AND BANK",
-                    "DEEP DIVE"
-                ],
-                correctText: "NOT UPSET",
-                time: 30 
-            },
-            {
-                question: "WHAT IS THE RECOVERY FOR THIS SITUATION?",
-                image: "assetto7.png", 
-                options: [
-                    "PULL TO UNLOAD, WINGS LEVELLED, PITCH UP AND DECREASE THROTTLE",
-                    "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP",
-                    "PULL TO UNLOAD WINGS LEVELLED, PITCH UP",
-                    "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE"
-                ],
-                correctText: "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE",
-                time: 30 
-            },
-            {
-                question: "WHAT IS THE AIRCRAFT DOING?",
-                image: "assetto8.png", 
-                options: [
-                    "RIGHT TURN PITCH UP",
-                    "LEFT TURN PITCH DOWN",
-                    "RIGHT TURN PITCH DOWN",
-                    "PITCH DOWN LEFT TURN"
-                ],
-                correctText: "RIGHT TURN PITCH DOWN",
-                time: 30 
-            },
-            {
-                question: "WHICH UPSET IS THIS?",
-                image: "assetto9.png", 
-                options: [
-                    "NOSE LOW",
-                    "NOT UPSET",
-                    "NOSE HIGH",
-                    "NOSE HIGH WITH BANK"
-                ],
-                correctText: "NOSE HIGH WITH BANK",
-                time: 30 
-            },
-            {
-                question: "HOW DO YOU RECOVER?",
-                image: "assetto10.png", 
-                options: [
-                    "PITCH DOWN, PUSH TO UNLOAD, PITCH UP AND ADJUST THROTTLE",
-                    "PUSH TO UNLOAD, PITCH UP AND ADJUST THROTTLE",
-                    "WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE",
-                    "REDUCE THROTTLE, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE"
-                ],
-                correctText: "REDUCE THROTTLE, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE",
-                time: 30 
-            }
+            { question: "WHAT IS THE RECOVERY FOR THIS SITUATION?", image: "assetto1.png", options: ["PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE", "DECREASE THROTTLE, PITCH UP", "DECREASE THROTTLE, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE", "PUSH TO UNLOAD, PITCH UP AND INCREASE THROTTLE"], correctText: "DECREASE THROTTLE, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE", time: 30 },
+            { question: "WHAT IS THE RECOVERY FOR THIS SITUATION?", image: "assetto2.png", options: ["PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE", "WINGS LEVELLED, PUSH TO UNLOAD, PITCH UP AND INCREASE THROTTLE", "THROTTLE IDLE, WINGS LEVELLED, PITCH UP", "PUSH TO UNLOAD, INCREASE THROTTLE, WINGS LEVELLED, PITCH UP"], correctText: "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE", time: 30 },
+            { question: "WHICH UPSET IS THIS?", image: "assetto3.png", options: ["NOSE HIGH", "NOSE HIGH AND BANK", "NOT UPSET", "STALL"], correctText: "NOT UPSET", time: 30 },
+            { question: "WHAT IS THE RECOVERY FOR THIS SITUATION?", image: "assetto4.png", options: ["PULL TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE", "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP", "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP", "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE"], correctText: "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE", time: 30 },
+            { question: "WHAT IS THE RECOVERY FOR THIS SITUATION?", image: "assetto5.png", options: ["PULL TO UNLOAD, WINGS LEVELLED, PITCH UP AND DECREASE THROTTLE", "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP", "PULL TO UNLOAD WINGS LEVELLED, PITCH UP", "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE"], correctText: "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE", time: 30 },
+            { question: "WHICH UPSET IS THIS?", image: "assetto6.png", options: ["NOSE LOW", "NOT UPSET", "NOSE LOW AND BANK", "DEEP DIVE"], correctText: "NOT UPSET", time: 30 },
+            { question: "WHAT IS THE RECOVERY FOR THIS SITUATION?", image: "assetto7.png", options: ["PULL TO UNLOAD, WINGS LEVELLED, PITCH UP AND DECREASE THROTTLE", "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP", "PULL TO UNLOAD WINGS LEVELLED, PITCH UP", "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE"], correctText: "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE", time: 30 },
+            { question: "WHAT IS THE AIRCRAFT DOING?", image: "assetto8.png", options: ["RIGHT TURN PITCH UP", "LEFT TURN PITCH DOWN", "RIGHT TURN PITCH DOWN", "PITCH DOWN LEFT TURN"], correctText: "RIGHT TURN PITCH DOWN", time: 30 },
+            { question: "WHICH UPSET IS THIS?", image: "assetto9.png", options: ["NOSE LOW", "NOT UPSET", "NOSE HIGH", "NOSE HIGH WITH BANK"], correctText: "NOSE HIGH WITH BANK", time: 30 },
+            { question: "HOW DO YOU RECOVER?", image: "assetto10.png", options: ["PITCH DOWN, PUSH TO UNLOAD, PITCH UP AND ADJUST THROTTLE", "PUSH TO UNLOAD, PITCH UP AND ADJUST THROTTLE", "WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE", "REDUCE THROTTLE, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE"], correctText: "REDUCE THROTTLE, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE", time: 30 }
         ];
 
         let quizData = [];
@@ -537,12 +419,13 @@
             // Popoliamo la schermata dei risultati visibile
             document.getElementById('final-score').innerText = `Well done, ${studentName.toUpperCase()}! You have successfully completed the test.`;
             
-            // Compiliamo il template invisibile del certificato
+            // Compiliamo il template invisibile del certificato con i dati reali
             document.getElementById('cert-student-name').innerText = studentName.toUpperCase();
             document.getElementById('cert-student-score').innerText = `with a score of ${percentageScore}%`;
+            document.getElementById('cert-student-date').innerText = currentDateStr; // Inserimento Data e Ora esatta
 
-            // Invio automatico mail
-            if(GOOGLE_SCRIPT_URL !== "" && GOOGLE_SCRIPT_URL !== "INCOLLA_QUI_L_URL_DI_GOOGLE_SCRIPT") {
+            // Invio automatico mail (solo dati testuali)
+            if(GOOGLE_SCRIPT_URL !== "") {
                 const payload = {
                     student: studentName,
                     date: currentDateStr,
@@ -569,10 +452,7 @@
         }
 
         function downloadCertificate() {
-            // Seleziona il div del certificato
             const element = document.getElementById('certificate-template');
-            
-            // Impostazioni per il PDF (formato A4)
             const opt = {
                 margin:       0,
                 filename:     `KSA100_Certificate_${studentName.replace(/\s+/g, '_')}.pdf`,
@@ -580,8 +460,6 @@
                 html2canvas:  { scale: 2, useCORS: true },
                 jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
-
-            // Genera e scarica il PDF
             html2pdf().set(opt).from(element).save();
         }
     </script>
