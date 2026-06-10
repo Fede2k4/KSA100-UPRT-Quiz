@@ -1,3 +1,4 @@
+HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +17,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             background-color: var(--aelo-red); 
             margin: 0;
             padding: 20px;
@@ -57,6 +58,7 @@
             border-radius: 8px;
             font-size: 16px;
             text-align: center;
+            font-family: inherit;
         }
 
         button {
@@ -71,6 +73,7 @@
             text-transform: uppercase;
             font-weight: bold;
             margin-top: 15px;
+            font-family: inherit;
         }
 
         button:hover { opacity: 0.9; transform: translateY(-2px); }
@@ -126,6 +129,7 @@
             font-size: 14px;
             transition: 0.15s;
             text-transform: uppercase;
+            font-family: inherit;
         }
 
         .option-btn:hover { 
@@ -160,7 +164,7 @@
     <div class="container">
         <div id="screen-login" class="screen active">
             <img src="https://lh3.googleusercontent.com/d/1Xg7X85x38pZ0N586Z795pZ6442654316" alt="AELO Swiss Academy" class="logo-main" onerror="this.src='logo.png';">
-            <h2>KSA 100 - UPRT TEST</h2>
+            <h2>WELCOME TO AELO KSA100 UPRT TEST</h2>
             <p>Enter your details and the session password to start.<br>(10 seconds per question).</p>
             
             <input type="text" id="student-name" placeholder="Full Name" required>
@@ -190,7 +194,6 @@
 
     <script>
         const SECRET_PASSWORD = "AELO2026";
-        // INCOLLA QUI L'URL COPIATO DA GOOGLE APPS SCRIPT
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzma0WxkF2mrOoOSdmZsiqTRamx80Jhs6NhBxUjKOs2_1SZ_OX_SJyESSJkDbBu42hQBg/exec";
 
         const masterQuizData = [
@@ -265,6 +268,54 @@
                 ],
                 correctText: "NOT UPSET",
                 time: 10 
+            },
+            {
+                question: "WHAT IS THE RECOVERY FOR THIS SITUATION?",
+                image: "assetto7.png", 
+                options: [
+                    "PULL TO UNLOAD, WINGS LEVELLED, PITCH UP AND DECREASE THROTTLE",
+                    "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP",
+                    "PULL TO UNLOAD WINGS LEVELLED, PITCH UP",
+                    "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE"
+                ],
+                correctText: "PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE",
+                time: 10 
+            },
+            {
+                question: "WHAT IS THE AIRCRAFT DOING?",
+                image: "assetto8.png", 
+                options: [
+                    "RIGHT TURN PITCH UP",
+                    "LEFT TURN PITCH DOWN",
+                    "RIGHT TURN PITCH DOWN",
+                    "PITCH DOWN LEFT TURN"
+                ],
+                correctText: "RIGHT TURN PITCH DOWN",
+                time: 10 
+            },
+            {
+                question: "WHICH UPSET IS THIS?",
+                image: "assetto9.png", 
+                options: [
+                    "NOSE LOW",
+                    "NOT UPSET",
+                    "NOSE HIGH",
+                    "NOSE HIGH WITH BANK"
+                ],
+                correctText: "NOSE HIGH WITH BANK",
+                time: 10 
+            },
+            {
+                question: "HOW DO YOU RECOVER?",
+                image: "assetto10.png", 
+                options: [
+                    "PITCH DOWN, PUSH TO UNLOAD, PITCH UP AND ADJUST THROTTLE",
+                    "PUSH TO UNLOAD, PITCH UP AND ADJUST THROTTLE",
+                    "WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE",
+                    "REDUCE THROTTLE, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE"
+                ],
+                correctText: "REDUCE THROTTLE, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE",
+                time: 10 
             }
         ];
 
@@ -274,7 +325,7 @@
         let studentName = "";
         let timerInterval;
         let timeLeft = 0;
-        let studentReportDetails = []; // Memorizza lo storico risposte dettagliato
+        let studentReportDetails = [];
 
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
@@ -376,7 +427,6 @@
             
             if (isCorrect) score++;
 
-            // Registra i dettagli per la mail di report
             studentReportDetails.push({
                 question: currentQuestion.question,
                 selected: selectedOptionText,
@@ -402,8 +452,7 @@
 
             document.getElementById('results-code').innerText = resultString;
 
-            // Invio automatico asincrono dei dati via email
-            if(GOOGLE_SCRIPT_URL !== "INCOLLA_QUI_L_URL_DI_GOOGLE_SCRIPT" && GOOGLE_SCRIPT_URL !== "") {
+            if(GOOGLE_SCRIPT_URL !== "" && GOOGLE_SCRIPT_URL !== "INCOLLA_QUI_L_URL_DI_GOOGLE_SCRIPT") {
                 const payload = {
                     student: studentName,
                     date: currentDateStr,
@@ -413,7 +462,7 @@
 
                 fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // Evita blocchi CORS cross-origin basilari dei browser
+                    mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 })
