@@ -76,6 +76,7 @@
             font-weight: bold;
             margin-top: 15px;
             font-family: inherit;
+            outline: none; /* Rimuove il bordo blu di focus sui browser moderni */
         }
 
         button:hover { opacity: 0.9; transform: translateY(-2px); }
@@ -132,12 +133,24 @@
             transition: 0.15s;
             text-transform: uppercase;
             font-family: inherit;
+            -webkit-tap-highlight-color: transparent; /* Rimuove l'ombra grigia sui telefoni */
         }
 
-        .option-btn:hover { 
-            background: var(--primary); 
+        /* Effetto hover SOLO per dispositivi con il mouse (risolve il problema dello Sticky Hover) */
+        @media (hover: hover) and (pointer: fine) {
+            .option-btn:hover { 
+                background: var(--primary); 
+                color: white;
+                border-color: var(--primary);
+            }
+        }
+
+        /* Effetto immediato durante il click/tap su tutti i dispositivi */
+        .option-btn:active {
+            background: var(--secondary);
             color: white;
-            border-color: var(--primary);
+            border-color: var(--secondary);
+            transform: scale(0.98);
         }
 
         .sending-status {
@@ -147,7 +160,7 @@
             margin-bottom: 20px;
         }
 
-        /* --- STILI PER IL CERTIFICATO --- */
+        /* --- STILI PER IL CERTIFICATO (LOGICA DI CENTRATURA ASSOLUTA) --- */
         #certificate-wrapper {
             position: absolute;
             left: -9999px; 
@@ -300,8 +313,8 @@
 
     <script>
         const SECRET_PASSWORD = "AELO2026";
-        // INCOLLA QUI IL TUO URL DI GOOGLE WEB APP
-        const GOOGLE_SCRIPT_URL = "INCOLLA_QUI_L_URL_DI_GOOGLE_SCRIPT";
+        // IL TUO URL DI GOOGLE SCRIPT
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzma0WxkF2mrOoOSdmZsiqTRamx80Jhs6NhBxUjKOs2_1SZ_OX_SJyESSJkDbBu42hQBg/exec";
 
         const masterQuizData = [
             { question: "WHAT IS THE RECOVERY FOR THIS SITUATION?", image: "assetto1.png", options: ["PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE", "DECREASE THROTTLE, PITCH UP", "DECREASE THROTTLE, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE", "PUSH TO UNLOAD, PITCH UP AND INCREASE THROTTLE"], correctText: "DECREASE THROTTLE, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE", time: 30 },
@@ -381,7 +394,12 @@
                 const btn = document.createElement('button');
                 btn.className = 'option-btn';
                 btn.innerText = option;
-                btn.onclick = () => selectAnswer(option);
+                // Modifica: Passiamo l'evento onclick al bottone
+                btn.onclick = (e) => {
+                    // Sfoca forzatamente il bottone per evitare che resti il focus
+                    e.target.blur(); 
+                    selectAnswer(option);
+                };
                 optionsContainer.appendChild(btn);
             });
 
@@ -455,7 +473,7 @@
         }
 
         function downloadCertificate() {
-            // TRUCCO INFALLIBILE: clona l'immagine già renderizzata
+            // Clona l'immagine principale
             const mainLogoUrl = document.getElementById('main-ui-logo').src;
             document.getElementById('cert-pdf-logo').src = mainLogoUrl;
 
