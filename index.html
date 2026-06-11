@@ -19,7 +19,8 @@
         }
 
         body {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            /* Impostato Avenir Next come font principale */
+            font-family: 'Avenir Next', Avenir, 'Helvetica Neue', Helvetica, Arial, sans-serif;
             background-color: var(--aelo-red); 
             margin: 0;
             padding: 20px;
@@ -76,7 +77,7 @@
             font-weight: bold;
             margin-top: 15px;
             font-family: inherit;
-            outline: none; /* Rimuove il bordo blu di focus sui browser moderni */
+            outline: none; 
         }
 
         button:hover { opacity: 0.9; transform: translateY(-2px); }
@@ -133,10 +134,9 @@
             transition: 0.15s;
             text-transform: uppercase;
             font-family: inherit;
-            -webkit-tap-highlight-color: transparent; /* Rimuove l'ombra grigia sui telefoni */
+            -webkit-tap-highlight-color: transparent; 
         }
 
-        /* Effetto hover SOLO per dispositivi con il mouse (risolve il problema dello Sticky Hover) */
         @media (hover: hover) and (pointer: fine) {
             .option-btn:hover { 
                 background: var(--primary); 
@@ -145,7 +145,6 @@
             }
         }
 
-        /* Effetto immediato durante il click/tap su tutti i dispositivi */
         .option-btn:active {
             background: var(--secondary);
             color: white;
@@ -160,7 +159,7 @@
             margin-bottom: 20px;
         }
 
-        /* --- STILI PER IL CERTIFICATO (LOGICA DI CENTRATURA ASSOLUTA) --- */
+        /* --- STILI PER IL CERTIFICATO --- */
         #certificate-wrapper {
             position: absolute;
             left: -9999px; 
@@ -172,7 +171,8 @@
             height: 1123px; 
             background-color: white;
             box-sizing: border-box;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            /* Applicato Avenir Next anche qui per il PDF generato */
+            font-family: 'Avenir Next', Avenir, 'Helvetica Neue', Helvetica, Arial, sans-serif;
             display: block;
             position: relative;
             margin: 0;
@@ -264,7 +264,7 @@
             <h2>WELCOME TO AELO KSA100 UPRT TEST</h2>
             <p>Enter your details and the session password to start.<br>(30 seconds per question).</p>
             
-            <input type="text" id="student-name" placeholder="Full Name" required>
+            <input type="text" id="student-name" placeholder="Name and Surname" required>
             <br>
             <input type="password" id="session-password" placeholder="Session Password" required>
             <br>
@@ -313,8 +313,8 @@
 
     <script>
         const SECRET_PASSWORD = "AELO2026";
-        // IL TUO URL DI GOOGLE SCRIPT
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzma0WxkF2mrOoOSdmZsiqTRamx80Jhs6NhBxUjKOs2_1SZ_OX_SJyESSJkDbBu42hQBg/exec";
+        // INCOLLA QUI IL TUO URL DI GOOGLE WEB APP
+        const GOOGLE_SCRIPT_URL = "INCOLLA_QUI_L_URL_DI_GOOGLE_SCRIPT";
 
         const masterQuizData = [
             { question: "WHAT IS THE RECOVERY FOR THIS SITUATION?", image: "assetto1.png", options: ["PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE", "DECREASE THROTTLE, PITCH UP", "DECREASE THROTTLE, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE", "PUSH TO UNLOAD, PITCH UP AND INCREASE THROTTLE"], correctText: "DECREASE THROTTLE, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE", time: 30 },
@@ -394,9 +394,7 @@
                 const btn = document.createElement('button');
                 btn.className = 'option-btn';
                 btn.innerText = option;
-                // Modifica: Passiamo l'evento onclick al bottone
                 btn.onclick = (e) => {
-                    // Sfoca forzatamente il bottone per evitare che resti il focus
                     e.target.blur(); 
                     selectAnswer(option);
                 };
@@ -473,7 +471,6 @@
         }
 
         function downloadCertificate() {
-            // Clona l'immagine principale
             const mainLogoUrl = document.getElementById('main-ui-logo').src;
             document.getElementById('cert-pdf-logo').src = mainLogoUrl;
 
