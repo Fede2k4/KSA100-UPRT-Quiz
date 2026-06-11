@@ -147,7 +147,7 @@
             margin-bottom: 20px;
         }
 
-        /* --- STILI PER IL CERTIFICATO (LOGICA DI CENTRATURA ASSOLUTA) --- */
+        /* STILI PER IL CERTIFICATO - CENTRATURA ASSOLUTA FORZATA */
         #certificate-wrapper {
             position: absolute;
             left: -9999px; 
@@ -155,92 +155,84 @@
         }
 
         #certificate-template {
-            width: 794px;   /* Larghezza fissa A4 in pixel a 96dpi */
-            height: 1123px; /* Altezza fissa A4 in pixel a 96dpi */
+            width: 900px;
+            height: 1272px; /* Proporzione A4 perfetta */
             background-color: white;
+            padding: 60px; /* Padding per sicurezza */
             box-sizing: border-box;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            display: block;
-            position: relative;
-            margin: 0;
-            padding: 0;
-        }
-
-        .cert-container-inner {
-            width: 100%;
-            height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: center; 
-            align-items: center;    
-            text-align: center;
+            justify-content: center; /* Centra verticalmente */
+            align-items: center;    /* Centra orizzontalmente i blocchi */
+            text-align: center;     /* Centra inline per sicurezza */
         }
 
-        /* Forza ogni blocco di testo al centro */
-        .cert-line {
+        /* Regole generali per i blocchi di testo nel certificato per garantire la larghezza piena e centratura */
+        #certificate-template div, 
+        #certificate-template p {
             width: 100%;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            display: block;
+            text-align: center; /* Forza il testo al centro del blocco */
+            margin-left: auto !important;
+            margin-right: auto !important;
         }
 
         .cert-title {
             color: #d12027;
-            font-size: 80px;
+            font-size: 85px;
             font-weight: 400;
             margin-bottom: 40px;
-            letter-spacing: 4px;
+            letter-spacing: 3px;
         }
 
-        .cert-text-small {
-            font-size: 26px;
+        .cert-text {
+            font-size: 32px;
             color: #000;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
         .cert-name {
-            font-size: 48px;
+            font-size: 55px;
             font-weight: bold;
             color: #000;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             text-transform: uppercase;
         }
 
         .cert-course {
             color: #d12027;
-            font-size: 48px;
+            font-size: 55px;
             font-weight: bold;
             margin-top: 10px;
             margin-bottom: 10px;
         }
         
         .cert-score {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
             color: #333;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
         }
 
         .cert-date {
-            font-size: 18px;
+            font-size: 20px;
             color: #666;
-            margin-bottom: 50px;
+            margin-bottom: 60px;
         }
 
-        .cert-footer-address {
-            font-size: 16px;
+        .cert-footer {
+            font-size: 20px;
             color: #000;
             line-height: 1.4;
-            margin-bottom: 50px;
+            margin-bottom: 60px;
         }
 
         .cert-logo {
-            max-width: 650px; /* Raddoppiato e centrato */
+            max-width: 780px; /* Logo grande 1.5x */
             height: auto;
-            margin-left: auto;
-            margin-right: auto;
-            display: block;
+            display: block; /* Importante per i margini auto */
+            margin-left: auto !important;
+            margin-right: auto !important;
         }
     </style>
 </head>
@@ -248,7 +240,7 @@
 
     <div class="container">
         <div id="screen-login" class="screen active">
-            <img src="https://lh3.googleusercontent.com/d/1Xg7X85x38pZ0N586Z795pZ6442654316" alt="AELO Swiss Academy" class="logo-main" onerror="this.src='logo.png';">
+            <img src="logo.png" alt="AELO Swiss Academy" class="logo-main" onerror="this.src='https://raw.githubusercontent.com/username/repository/main/logo.png';">
             <h2>WELCOME TO AELO KSA100 UPRT TEST</h2>
             <p>Enter your details and the session password to start.<br>(30 seconds per question).</p>
             
@@ -277,31 +269,27 @@
 
     <div id="certificate-wrapper">
         <div id="certificate-template">
-            <div class="cert-container-inner">
-                <div class="cert-line cert-title">CERTIFICATE</div>
-                <div class="cert-line cert-text-small">This is to certify that</div>
-                <div class="cert-line cert-name" id="cert-student-name">NAME SURNAME</div>
-                <div class="cert-line cert-text-small">has successfully completed</div>
-                <div class="cert-line cert-course">KSA100 UPRT TEST</div>
-                <div class="cert-line cert-score" id="cert-student-score">with a score of 100%</div>
-                <div class="cert-line cert-date" id="cert-student-date">01/01/2026, 00:00:00</div>
-                
-                <div class="cert-line cert-footer-address">
-                    Aero Locarno<br>
-                    CH.ATO.0311<br>
-                    Locarno, Switzerland
-                </div>
-                
-                <div class="cert-line">
-                    <img src="https://lh3.googleusercontent.com/d/1Xg7X85x38pZ0N586Z795pZ6442654316" alt="AELO Logo" class="cert-logo">
-                </div>
+            <div class="cert-title">CERTIFICATE</div>
+            <div class="cert-text">This is to certify that</div>
+            <div class="cert-name" id="cert-student-name">NAME SURNAME</div>
+            <div class="cert-text">has successfully completed</div>
+            <div class="cert-course">KSA100 UPRT TEST</div>
+            <div class="cert-score" id="cert-student-score">with a score of 100%</div>
+            <div class="cert-date" id="cert-student-date">01/01/2026, 00:00:00</div>
+            
+            <div class="cert-footer cert-text">
+                Aero Locarno<br>
+                CH.ATO.0311<br>
+                Locarno, Switzerland
             </div>
+            <img src="logo.png" alt="AELO Swiss Academy" class="cert-logo" onerror="this.src='https://raw.githubusercontent.com/username/repository/main/logo.png';">
         </div>
     </div>
 
     <script>
         const SECRET_PASSWORD = "AELO2026";
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzma0WxkF2mrOoOSdmZsiqTRamx80Jhs6NhBxUjKOs2_1SZ_OX_SJyESSJkDbBu42hQBg/exec";
+        // INCOLLA QUI IL TUO URL DI GOOGLE WEB APP
+        const GOOGLE_SCRIPT_URL = "INCOLLA_QUI_L_URL_DI_GOOGLE_SCRIPT";
 
         const masterQuizData = [
             { question: "WHAT IS THE RECOVERY FOR THIS SITUATION?", image: "assetto1.png", options: ["PUSH TO UNLOAD, WINGS LEVELLED, PITCH UP AND INCREASE THROTTLE", "DECREASE THROTTLE, PITCH UP", "DECREASE THROTTLE, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE", "PUSH TO UNLOAD, PITCH UP AND INCREASE THROTTLE"], correctText: "DECREASE THROTTLE, WINGS LEVELLED, PITCH UP AND ADJUST THROTTLE", time: 30 },
@@ -350,8 +338,15 @@
             studentName = document.getElementById('student-name').value.trim();
             const typedPassword = document.getElementById('session-password').value.trim();
 
-            if (!studentName) { alert("Please enter your name."); return; }
-            if (typedPassword !== SECRET_PASSWORD) { alert("Invalid Session Password! Access denied."); return; }
+            if (!studentName) {
+                alert("Please enter your name.");
+                return;
+            }
+
+            if (typedPassword !== SECRET_PASSWORD) {
+                alert("Invalid Session Password! Access denied.");
+                return;
+            }
             
             quizData = prepareQuizData();
             currentQuestionIndex = 0;
@@ -359,20 +354,28 @@
             studentReportDetails = [];
             
             document.getElementById('result-title').style.color = "var(--dark)";
+            
             showScreen('screen-quiz');
             loadQuestion();
         }
 
         function loadQuestion() {
             clearInterval(timerInterval);
-            if (currentQuestionIndex >= quizData.length) { endQuiz(); return; }
+            if (currentQuestionIndex >= quizData.length) {
+                endQuiz();
+                return;
+            }
 
             const currentQuestion = quizData[currentQuestionIndex];
             document.getElementById('question-text').innerText = `${currentQuestionIndex + 1}. ${currentQuestion.question}`;
             
             const imgElement = document.getElementById('quiz-img');
-            imgElement.src = currentQuestion.image;
-            imgElement.style.display = "inline-block";
+            if (currentQuestion.image && currentQuestion.image !== "") {
+                imgElement.src = currentQuestion.image;
+                imgElement.style.display = "inline-block";
+            } else {
+                imgElement.style.display = "none";
+            }
 
             const optionsContainer = document.getElementById('options-container');
             optionsContainer.innerHTML = '';
@@ -388,11 +391,14 @@
             timeLeft = currentQuestion.time * 1000;
             updateTimerBar();
             
+            const tickRate = 100; 
             timerInterval = setInterval(() => {
-                timeLeft -= 100;
+                timeLeft -= tickRate;
                 updateTimerBar();
-                if (timeLeft <= 0) selectAnswer("TIMEOUT - NO ANSWER"); 
-            }, 100);
+                if (timeLeft <= 0) {
+                    selectAnswer("TIMEOUT - NO ANSWER"); 
+                }
+            }, tickRate);
         }
 
         function updateTimerBar() {
@@ -405,6 +411,7 @@
             clearInterval(timerInterval);
             const currentQuestion = quizData[currentQuestionIndex];
             const isCorrect = selectedOptionText === currentQuestion.correctText;
+            
             if (isCorrect) score++;
 
             studentReportDetails.push({
@@ -420,36 +427,53 @@
 
         function endQuiz() {
             showScreen('screen-results');
+            
             const percentageScore = Math.round((score / quizData.length) * 100);
             const currentDateStr = new Date().toLocaleString();
+            
             const isPassed = percentageScore >= 35;
 
             if (isPassed) {
                 document.getElementById('result-title').innerText = "CONGRATULATIONS!";
-                document.getElementById('final-score').innerText = `Well done, ${studentName.toUpperCase()}! Test completed with ${percentageScore}%.`;
+                document.getElementById('final-score').innerText = `Well done, ${studentName.toUpperCase()}! You have successfully completed the test with a score of ${percentageScore}%.`;
                 document.getElementById('cert-instruction').style.display = "block";
                 document.getElementById('download-cert-btn').style.display = "inline-block";
                 
+                // Compiliamo il template invisibile del certificato
                 document.getElementById('cert-student-name').innerText = studentName.toUpperCase();
                 document.getElementById('cert-student-score').innerText = `with a score of ${percentageScore}%`;
                 document.getElementById('cert-student-date').innerText = currentDateStr;
             } else {
                 document.getElementById('result-title').innerText = "TEST FAILED";
-                document.getElementById('result-title').style.color = "var(--danger)"; 
-                document.getElementById('final-score').innerText = `Sorry, ${studentName.toUpperCase()}. You scored ${percentageScore}%. (Pass: 35%)`;
+                document.getElementById('result-title').style.color = "var(--danger)"; // Testo in rosso
+                document.getElementById('final-score').innerText = `Sorry, ${studentName.toUpperCase()}. You scored ${percentageScore}%, which is below the 35% required to pass.`;
                 document.getElementById('cert-instruction').style.display = "none";
                 document.getElementById('download-cert-btn').style.display = "none";
             }
 
-            if(GOOGLE_SCRIPT_URL !== "") {
+            // Invio automatico mail (solo dati testuali)
+            if(GOOGLE_SCRIPT_URL !== "" && GOOGLE_SCRIPT_URL !== "INCOLLA_QUI_L_URL_DI_GOOGLE_SCRIPT") {
+                const payload = {
+                    student: studentName,
+                    date: currentDateStr,
+                    score: percentageScore,
+                    details: studentReportDetails
+                };
+
                 fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ student: studentName, date: currentDateStr, score: percentageScore, details: studentReportDetails })
-                }).then(() => {
+                    body: JSON.stringify(payload)
+                })
+                .then(() => {
                     document.getElementById('mail-status').innerText = "✓ Report successfully sent to ksa100.aelo@gmail.com";
                     document.getElementById('mail-status').style.color = "green";
+                })
+                .catch((err) => {
+                    document.getElementById('mail-status').innerText = "✕ Networking error during report dispatch.";
+                    document.getElementById('mail-status').style.color = "red";
+                    console.error(err);
                 });
             }
         }
@@ -457,11 +481,11 @@
         function downloadCertificate() {
             const element = document.getElementById('certificate-template');
             const opt = {
-                margin: 0,
-                filename: `KSA100_Certificate_${studentName.replace(/\s+/g, '_')}.pdf`,
-                image: { type: 'jpeg', quality: 1 },
-                html2canvas: { scale: 3, useCORS: true, letterRendering: true },
-                jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait' }
+                margin:       0,
+                filename:     `KSA100_Certificate_${studentName.replace(/\s+/g, '_')}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
             html2pdf().set(opt).from(element).save();
         }
