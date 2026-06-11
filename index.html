@@ -1,3 +1,4 @@
+HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -247,7 +248,7 @@
 
     <div class="container">
         <div id="screen-login" class="screen active">
-            <img src="logo.png" alt="AELO Swiss Academy" class="logo-main">
+            <img id="main-ui-logo" src="logo.png" alt="AELO Swiss Academy" class="logo-main">
             <h2>WELCOME TO AELO KSA100 UPRT TEST</h2>
             <p>Enter your details and the session password to start.<br>(30 seconds per question).</p>
             
@@ -292,7 +293,7 @@
                 </div>
                 
                 <div class="cert-line">
-                    <img src="logo.png" alt="AELO Logo" class="cert-logo" crossorigin="anonymous">
+                    <img id="cert-pdf-logo" src="" alt="AELO Logo" class="cert-logo">
                 </div>
             </div>
         </div>
@@ -455,6 +456,10 @@
         }
 
         function downloadCertificate() {
+            // TRUCCO INFALLIBILE: clona l'immagine già renderizzata
+            const mainLogoUrl = document.getElementById('main-ui-logo').src;
+            document.getElementById('cert-pdf-logo').src = mainLogoUrl;
+
             const element = document.getElementById('certificate-template');
             const opt = {
                 margin: 0,
