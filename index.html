@@ -151,13 +151,6 @@
             transform: scale(0.98);
         }
 
-        .upload-status {
-            font-weight: bold;
-            color: #7f8c8d;
-            margin-top: 15px;
-            font-size: 14px;
-        }
-
         /* --- STILI PER IL CERTIFICATO --- */
         #certificate-wrapper {
             position: absolute;
@@ -279,7 +272,6 @@
         <div id="screen-results" class="screen">
             <h2 id="result-title">QUIZ COMPLETED!</h2>
             <p id="final-score">Calculating results...</p>
-            <div id="drive-upload-status" class="upload-status">Saving report to Google Drive...</div>
             <p id="cert-instruction">You can download a copy of your certificate below:</p>
             <button id="download-cert-btn" onclick="downloadCertificate()" style="background-color: #11998e;">DOWNLOAD CERTIFICATE</button>
         </div>
@@ -311,19 +303,78 @@
 
     <script>
         const SECRET_PASSWORD = "AELO2026";
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbmy8zVXvuFzwNCTZM_YbZiDxtkoHxI8NVeKCLBZAGF76QGmWWYdJrS2382qEKYvql7VQ/exec";
 
         const masterQuizData = [
-            { question: "WHAT IS THE FIRST ACTION FOR THE RECOVERY OF THIS SITUATION?", image: "assetto1.png", options: ["NOSE DOWN", "INCREASE POWER", "NOSE UP", "DECREASE POWER"], correctText: "DECREASE POWER", time: 30 },
-            { question: "WHAT IS THE FIRST ACTION FOR THE RECOVERY OF THIS SITUATION?", image: "assetto2.png", options: ["NOSE DOWN, RIGHT, NOSE UP AND INCREASE POWER", "RIGHT, NOSE DOWN, NOSE UP AND INCREASE POWER", "POWER IDLE, LEFT, NOSE UP", "NOSE DOWN, INCREASE POWER, LEFT, NOSE UP"], correctText: "NOSE DOWN, RIGHT, NOSE UP AND INCREASE POWER", time: 30 },
-            { question: "WHICH UPSET IS THIS?", image: "assetto3.png", options: ["NOSE UP", "NOSE UP AND BANK", "NOT UPSET", "STALL"], correctText: "NOT UPSET", time: 30 },
-            { question: "WHAT IS THE FIRST ACTION FOR THE RECOVERY OF THIS SITUATION?", image: "assetto4.png", options: ["INCREASE POWER", "NOSE DOWN", "DECREASE POWER", "ROLL LEFT"], correctText: "NOSE DOWN", time: 30 },
-            { question: "WHAT IS THE FIRST ACTION FOR THE RECOVERY OF THIS SITUATION?", image: "assetto5.png", options: ["NOSE DOWN", "ROLL RIGHT", "ROLL LEFT", "DECREASE POWER"], correctText: "DECREASE POWER", time: 30 },
-            { question: "WHICH UPSET IS THIS?", image: "assetto6.png", options: ["NOSE DOWN", "NOT UPSET", "NOSE DOWN AND BANK", "DEEP DIVE"], correctText: "NOT UPSET", time: 30 },
-            { question: "WHAT IS THE FIRST ACTION FOR THE RECOVERY OF THIS SITUATION?", image: "assetto7.png", options: ["ROLL LEFT", "NOSE UP", "NOSE DOWN", "ROLL RIGHT"], correctText: "NOSE DOWN", time: 30 },
-            { question: "WHAT IS THE AIRCRAFT DOING?", image: "assetto8.png", options: ["RIGHT TURN AND NOSE UP", "LEFT TURN AND NOSE DOWN", "RIGHT TURN AND NOSE DOWN", "NOSE DOWN AND LEFT TURN"], correctText: "RIGHT TURN AND NOSE DOWN", time: 30 },
-            { question: "WHICH UPSET IS THIS?", image: "assetto9.png", options: ["NOSE DOWN", "NOT UPSET", "NOSE UP", "NOSE UP WITH BANK"], correctText: "NOSE UP WITH BANK", time: 30 },
-            { question: "WHAT IS THE FIRST ACTION FOR THE RECOVERY OF THIS SITUATION?", image: "assetto10.png", options: ["NOSE DOWN", "ROLL LEFT", "ROLL RIGHT", "REDUCE POWER"], correctText: "REDUCE POWER", time: 30 }
+            { 
+                question: "WHAT IS THE FIRST ACTION FOR THE RECOVERY OF THIS SITUATION?", 
+                image: "assetto1.png", 
+                options: ["NOSE DOWN", "INCREASE POWER", "NOSE UP", "DECREASE POWER"], 
+                correctText: "DECREASE POWER", 
+                time: 30 
+            },
+            { 
+                question: "WHAT IS THE FIRST ACTION FOR THE RECOVERY OF THIS SITUATION?", 
+                image: "assetto2.png", 
+                options: ["ROLL RIGHT", "NOSE DOWN", "INCREASE POWER", "DECREASE POWER"], 
+                correctText: "NOSE DOWN", 
+                time: 30 
+            },
+            { 
+                question: "WHICH UPSET IS THIS?", 
+                image: "assetto3.png", 
+                options: ["NOSE UP", "NOSE UP AND BANK", "NOT UPSET", "STALL"], 
+                correctText: "NOT UPSET", 
+                time: 30 
+            },
+            { 
+                question: "WHAT IS THE FIRST ACTION FOR THE RECOVERY OF THIS SITUATION?", 
+                image: "assetto4.png", 
+                options: ["INCREASE POWER", "NOSE DOWN", "DECREASE POWER", "ROLL LEFT"], 
+                correctText: "NOSE DOWN", 
+                time: 30 
+            },
+            { 
+                question: "WHAT IS THE FIRST ACTION FOR THE RECOVERY OF THIS SITUATION?", 
+                image: "assetto5.png", 
+                options: ["NOSE DOWN", "ROLL RIGHT", "ROLL LEFT", "DECREASE POWER"], 
+                correctText: "DECREASE POWER", 
+                time: 30 
+            },
+            { 
+                question: "WHICH UPSET IS THIS?", 
+                image: "assetto6.png", 
+                options: ["NOSE DOWN", "NOT UPSET", "NOSE DOWN AND BANK", "DEEP DIVE"], 
+                correctText: "NOT UPSET", 
+                time: 30 
+            },
+            { 
+                question: "WHAT IS THE FIRST ACTION FOR THE RECOVERY OF THIS SITUATION?", 
+                image: "assetto7.png", 
+                options: ["ROLL LEFT", "NOSE UP", "NOSE DOWN", "ROLL RIGHT"], 
+                correctText: "NOSE DOWN", 
+                time: 30 
+            },
+            { 
+                question: "WHAT IS THE AIRCRAFT DOING?", 
+                image: "assetto8.png", 
+                options: ["RIGHT TURN AND NOSE UP", "LEFT TURN AND NOSE DOWN", "RIGHT TURN AND NOSE DOWN", "NOSE DOWN AND LEFT TURN"], 
+                correctText: "RIGHT TURN AND NOSE DOWN", 
+                time: 30 
+            },
+            { 
+                question: "WHICH UPSET IS THIS?", 
+                image: "assetto9.png", 
+                options: ["NOSE DOWN", "NOT UPSET", "NOSE UP", "NOSE UP WITH BANK"], 
+                correctText: "NOSE UP WITH BANK", 
+                time: 30 
+            },
+            { 
+                question: "WHAT IS THE FIRST ACTION FOR THE RECOVERY OF THIS SITUATION?", 
+                image: "assetto10.png", 
+                options: ["NOSE DOWN", "ROLL LEFT", "ROLL RIGHT", "REDUCE POWER"], 
+                correctText: "REDUCE POWER", 
+                time: 30 
+            }
         ];
 
         let quizData = [];
@@ -414,9 +465,7 @@
             const currentDateStr = new Date().toLocaleString();
             const isPassed = percentageScore >= 35;
 
-            let filePrefix = "FAIL_";
             if (isPassed) {
-                filePrefix = "PASS_";
                 document.getElementById('result-title').innerText = "CONGRATULATIONS!";
                 document.getElementById('final-score').innerText = `Well done, ${studentName.toUpperCase()}! Test completed with ${percentageScore}%.`;
                 document.getElementById('cert-instruction').style.display = "block";
@@ -426,48 +475,12 @@
                 document.getElementById('cert-student-score').innerText = `with a score of ${percentageScore}%`;
                 document.getElementById('cert-student-date').innerText = currentDateStr;
             } else {
-                filePrefix = "FAIL_";
                 document.getElementById('result-title').innerText = "FAILED";
                 document.getElementById('result-title').style.color = "var(--danger)"; 
                 document.getElementById('final-score').innerText = `Sorry, ${studentName.toUpperCase()}. You scored ${percentageScore}%. (Pass: 35%)`;
                 document.getElementById('cert-instruction').style.display = "none";
                 document.getElementById('download-cert-btn').style.display = "none";
             }
-
-            // Generazione del report testuale
-            let reportContent = `AELO KSA100 UPRT TEST REPORT\n`;
-            reportContent += `===================================\n`;
-            reportContent += `Student Name: ${studentName.toUpperCase()}\n`;
-            reportContent += `Date & Time:  ${currentDateStr}\n`;
-            reportContent += `Final Score:  ${percentageScore}% (${isPassed ? 'PASSED' : 'FAILED'})\n\n`;
-            reportContent += `DETAILED LOG:\n`;
-            studentReportDetails.forEach((item, index) => {
-                reportContent += `${index + 1}. ${item.question}\n`;
-                reportContent += `   Selected: ${item.selected}\n`;
-                reportContent += `   Correct:  ${item.correct}\n`;
-                reportContent += `   Result:   ${item.isCorrect ? '✓ CORRECT' : '✕ WRONG'}\n\n`;
-            });
-
-            // Sostituisce gli spazi con i trattini bassi per il titolo del file
-            const formattedName = studentName.replace(/\s+/g, '_');
-            const fileName = `${filePrefix}${formattedName}.txt`;
-
-            // Invio asincrono a Google Apps Script
-            fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ filename: fileName, content: reportContent })
-            })
-            .then(() => {
-                document.getElementById('drive-upload-status').innerText = `✓ Report successfully recorded as: ${fileName}`;
-                document.getElementById('drive-upload-status').style.color = "green";
-            })
-            .catch(err => {
-                document.getElementById('drive-upload-status').innerText = "✕ Networking issue during cloud storage record.";
-                document.getElementById('drive-upload-status').style.color = "red";
-                console.error(err);
-            });
         }
 
         function downloadCertificate() {
